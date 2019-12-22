@@ -3,17 +3,16 @@ package ua.epam6.IOCRUD.controller;
 import ua.epam6.IOCRUD.exceptions.ChangesRejectedException;
 import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
 import ua.epam6.IOCRUD.model.Skill;
-import ua.epam6.IOCRUD.repository.SkillRepository;
 import ua.epam6.IOCRUD.repository.javaio.SkillRepositoryImpl;
 
 import java.util.List;
 
 public class SkillController {
-    private SkillRepository repo = new SkillRepositoryImpl();
+    private SkillRepositoryImpl repo = new SkillRepositoryImpl();
 
-    public String getAll() throws NoSuchElementException, ChangesRejectedException {
+    public String getAll() {
         StringBuilder stringBuilder = new StringBuilder();
-        List<Skill> skills = repo.readAll();
+        List<Skill> skills = repo.getAll();
 
         for (Skill skill : skills) {
             stringBuilder.append(skill);
@@ -23,8 +22,8 @@ public class SkillController {
         return stringBuilder.toString();
     }
 
-    public String getById(long id) throws NoSuchElementException {
-        Skill skill = repo.readByID(id);
+    public String getById(long id) {
+        Skill skill = repo.getByID(id);
         if (skill == null) {
             return "Skill not found";
         } else {
@@ -32,10 +31,10 @@ public class SkillController {
         }
     }
 
-    public String addNewSkill(String name) throws NoSuchElementException, ChangesRejectedException {
+    public String addNewSkill(String name) throws ChangesRejectedException {
         Long id = repo.getLastId() + 1;
         Skill skill = new Skill(id, name);
-        List<Skill> skills = repo.readAll();
+        List<Skill> skills = repo.getAll();
         if (skills.contains(skill)) {
             return "Skill already exists";
         } else {
@@ -44,7 +43,7 @@ public class SkillController {
         }
     }
 
-    public String update(long id, String name) throws ChangesRejectedException {
+    public String update(long id, String name) {
         Skill skill = new Skill(id, name);
         try {
             repo.update(skill);

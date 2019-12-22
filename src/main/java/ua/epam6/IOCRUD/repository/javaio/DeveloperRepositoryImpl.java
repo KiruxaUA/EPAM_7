@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class DeveloperRepositoryImpl implements DeveloperRepository {
-    private FileProcessor fileProcessor = new FileProcessor("src\\main\\resources\\Developer.txt");
+    private FileProcessor fileProcessor = new FileProcessor("src\\main\\resources\\developers.txt");
     private AccountRepository accountRepository;
     private SkillRepository skillRepository;
 
@@ -23,7 +23,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         this.skillRepository = skillRepository;
     }
 
-    public Developer readByID(Long id) throws NoSuchElementException {
+    public Developer getByID(Long id) throws NoSuchElementException {
         Developer developer = null;
         try {
             for (String line : fileProcessor.readFile()) {
@@ -37,7 +37,25 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         return developer;
     }
 
-    public List<Developer> readAll() throws NoSuchElementException {
+    public Long getLastId() throws ChangesRejectedException, NoSuchElementException {
+        List<String> entities = fileProcessor.readFile();
+        if (entities.size() == 0) {
+            return 0L;
+        }
+        long[] IDs = new long[entities.size()];
+        for (int i = 0; i < entities.size(); i++) {
+            IDs[i] = deserialize(entities.get(i)).getId();
+        }
+        long max = IDs[0];
+        for (long item : IDs) {
+            if (item > max) {
+                max = item;
+            }
+        }
+        return max;
+    }
+
+    public List<Developer> getAll() throws NoSuchElementException {
         List<Developer> list = new ArrayList<Developer>();
         try {
             for (String line : fileProcessor.readFile()) {
@@ -52,27 +70,29 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         return list;
     }
 
-    public void create(Developer developer) throws NoSuchElementException {
-        List<Developer> developers = readAll();
+    public Developer create(Developer developer) throws NoSuchElementException {
+        List<Developer> developers = getAll();
         developers.add(developer);
         serialize(developers);
+        return developer;
     }
 
     public void delete(Developer developer) throws NoSuchElementException {
-        List<Developer> developers = readAll();
+        List<Developer> developers = getAll();
         if (developers.remove(developer)) {
             serialize(developers);
         }
     }
 
-    public void update(Developer updatedDeveloper) throws NoSuchElementException {
-        List<Developer> developers = readAll();
+    public Developer update(Developer updatedDeveloper) throws NoSuchElementException {
+        List<Developer> developers = getAll();
         boolean updated = developers.removeIf(dev -> dev.getId().equals(updatedDeveloper.getId()));
         if (!updated) {
             throw new NoSuchElementException();
         }
         developers.add(updatedDeveloper);
         serialize(developers);
+        return updatedDeveloper;
     }
 
     private void serialize(Collection<Developer> collection) {
@@ -99,12 +119,12 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
                 name = token.substring(5);
             }
             if (token.startsWith("account:")) {
-                account = accountRepository.readByID(Long.parseLong(token.substring(8)));
+                account = accountRepository.getByID(Long.parseLong(token.substring(8)));
             }
             if (token.startsWith("skills:")) {
                 String[] numbers = token.substring(7).split(",");
                 for (String number : numbers) {
-                    skills.add(skillRepository.readByID(Long.parseLong(number)));
+                    skills.add(skillRepository.getByID(Long.parseLong(number)));
                 }
             }
         }

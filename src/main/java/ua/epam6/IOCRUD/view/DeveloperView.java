@@ -3,8 +3,8 @@ package ua.epam6.IOCRUD.view;
 import ua.epam6.IOCRUD.controller.DeveloperController;
 import ua.epam6.IOCRUD.exceptions.ChangesRejectedException;
 import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
-import ua.epam6.IOCRUD.repository.AccountRepository;
 import ua.epam6.IOCRUD.repository.SkillRepository;
+import ua.epam6.IOCRUD.repository.javaio.AccountRepositoryImpl;
 import ua.epam6.IOCRUD.utils.InputReader;
 
 import java.util.HashSet;
@@ -16,14 +16,15 @@ public class DeveloperView {
     private String menu = "1: Get data of dev's\n" +
             "2: Get dev's data by id\n" +
             "3: Add new developer\n" +
-            "4: Update dev's data\n";
+            "4: Update dev's data\n" +
+            "5: Back to main menu\n";
 
-    public DeveloperView(InputReader reader, SkillRepository skillRepository, AccountRepository accountRepository) {
+    public DeveloperView(InputReader reader, SkillRepository skillRepository, AccountRepositoryImpl accountRepository) {
         this.inputReader = reader;
         this.controller = new DeveloperController(skillRepository, accountRepository);
     }
 
-    public void run() throws NoSuchElementException, ChangesRejectedException {
+    public boolean run() throws NoSuchElementException, ChangesRejectedException {
         while (true) {
             System.out.println(menu);
             int choice = inputReader.getIntInput();
@@ -34,7 +35,7 @@ public class DeveloperView {
                     break;
                 }
                 case 2: {
-                    System.out.println("Enter id of the account: ");
+                    System.out.println("Enter ID of the account: ");
                     int input = inputReader.getIntInput();
                     System.out.println(controller.getById(input));
                     break;
@@ -47,9 +48,13 @@ public class DeveloperView {
                     update();
                     break;
                 }
+                case 5: {
+                    return true;
+                }
                 default: {
                     System.out.println("Incorrect choice");
                 }
+                return false;
             }
         }
     }

@@ -13,13 +13,13 @@ public class AccountView {
                     "2: Get data from a specific account\n" +
                     "3: Add new account\n" +
                     "4: Update account\n" +
-                    "5: exit menu\n";
+                    "5: Back to main menu\n";
 
     public AccountView(InputReader reader) {
         this.inputReader = reader;
     }
 
-    public void run() throws NoSuchElementException, ChangesRejectedException {
+    public boolean run() throws NoSuchElementException, ChangesRejectedException {
         while (true) {
             System.out.println(menu);
             int choice = inputReader.getIntInput();
@@ -30,7 +30,7 @@ public class AccountView {
                     break;
                 }
                 case 2: {
-                    System.out.println("Enter id of the account: ");
+                    System.out.println("Enter ID of the account: ");
                     int input = inputReader.getIntInput();
                     System.out.println(controller.getById(input));
                     break;
@@ -42,16 +42,20 @@ public class AccountView {
                     break;
                 }
                 case 4: {
-                    System.out.println("Enter id of the account: ");
+                    System.out.println("Enter ID of the account: ");
                     int input = inputReader.getIntInput();
                     System.out.println("Input account of data: ");
                     String data = inputReader.getStringInput();
                     System.out.println(controller.update(input, data));
                     break;
                 }
+                case 5: {
+                    return true;
+                }
                 default: {
                     System.out.println("Incorrect choice");
                 }
+                return false;
             }
         }
     }

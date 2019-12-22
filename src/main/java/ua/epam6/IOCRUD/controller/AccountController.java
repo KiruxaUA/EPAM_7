@@ -4,17 +4,16 @@ import ua.epam6.IOCRUD.exceptions.ChangesRejectedException;
 import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.model.AccountStatus;
-import ua.epam6.IOCRUD.repository.AccountRepository;
 import ua.epam6.IOCRUD.repository.javaio.AccountRepositoryImpl;
 
 import java.util.List;
 
 public class AccountController {
-    private AccountRepository repo = new AccountRepositoryImpl();
+    private AccountRepositoryImpl repo = new AccountRepositoryImpl();
 
-    public String getAll() throws NoSuchElementException, ChangesRejectedException {
+    public String getAll() {
         StringBuilder stringBuilder = new StringBuilder();
-        List<Account> accounts = repo.readAll();
+        List<Account> accounts = repo.getAll();
 
         for (Account account : accounts) {
             stringBuilder.append(account);
@@ -25,8 +24,8 @@ public class AccountController {
     }
 
 
-    public String getById(long id) throws NoSuchElementException {
-        Account account = repo.readByID(id);
+    public String getById(long id) {
+        Account account = repo.getByID(id);
         if (account == null) {
             return "Account not found";
         }
@@ -35,10 +34,10 @@ public class AccountController {
         }
     }
 
-    public String create(String data) throws ChangesRejectedException, NoSuchElementException {
+    public String create(String data) throws ChangesRejectedException {
         long id = repo.getLastId() + 1;
         Account account = new Account(id, data, AccountStatus.ACTIVE);
-        List<Account> accounts = repo.readAll();
+        List<Account> accounts = repo.getAll();
         if (accounts.contains(account)) {
             return "Account already exist!";
         } else {
@@ -47,7 +46,7 @@ public class AccountController {
         }
     }
 
-    public String update(long input, String data) throws ChangesRejectedException {
+    public String update(long input, String data) {
         Account account = new Account(input, data, AccountStatus.ACTIVE);
         try {
             repo.update(account);

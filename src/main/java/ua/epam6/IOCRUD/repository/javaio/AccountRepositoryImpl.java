@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AccountRepositoryImpl implements AccountRepository {
-    private FileProcessor fileProcessor = new FileProcessor("src\\main\\resources\\Account.txt");
+    private FileProcessor fileProcessor = new FileProcessor("src\\main\\resources\\accounts.txt");
 
-    public Account readByID(Long id) {
+    public Account getByID(Long id) {
         Account account = null;
         try {
-            for(String line : fileProcessor.readFile()) {
+            for(String line: fileProcessor.readFile()) {
                 if(line.startsWith("id:" + id)) {
                     account = deserialize(line);
                     break;
@@ -29,7 +29,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         return account;
     }
 
-    public List<Account> readAll() {
+    public List<Account> getAll() {
         List<Account> accounts = new ArrayList<Account>();
         try {
             for (String line : fileProcessor.readFile()) {
@@ -44,27 +44,47 @@ public class AccountRepositoryImpl implements AccountRepository {
         return accounts;
     }
 
-    public void create(Account account) {
-        List<Account> accounts = readAll();
+    public Long getLastId() throws ChangesRejectedException {
+        List<String> entities = fileProcessor.readFile();
+        if (entities.size() == 0) {
+            return 0L;
+        }
+        long[] IDs = new long[entities.size()];
+        for (int i = 0; i < entities.size(); i++) {
+            IDs[i] = deserialize(entities.get(i)).getId();
+        }
+        long max = IDs[0];
+        for (long item : IDs) {
+            if (item > max) {
+                max = item;
+            }
+        }
+        return max;
+    }
+
+    public Account create(Account account) {
+        List<Account> accounts = getAll();
         accounts.add(account);
         serialize(accounts);
+        return account;
     }
 
     public void delete(Account account) {
-        List<Account> accounts = readAll();
+        List<Account> accounts = getAll();
         if (accounts.remove(account)) {
             serialize(accounts);
         }
     }
 
-    public void update(Account account) throws NoSuchElementException {
-        List<Account> accounts = readAll();
+    public Account update(Account account) throws NoSuchElementException {
+        List<Account> accounts = getAll();
         boolean updated = accounts.removeIf(acc -> acc.getId().equals(account.getId()));
         if (!updated) {
             throw new NoSuchElementException();
         }
         accounts.add(account);
         serialize(accounts);
+        return account;
     }
 
     private String stringify(Account account) {
@@ -96,7 +116,6 @@ public class AccountRepositoryImpl implements AccountRepository {
                 status = AccountStatus.valueOf(token.substring(7));
             }
         }
-
         return new Account(id, name, status);
     }
 }

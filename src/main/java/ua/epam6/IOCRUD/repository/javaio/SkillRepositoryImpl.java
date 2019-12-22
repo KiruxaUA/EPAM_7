@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SkillRepositoryImpl implements SkillRepository {
-    private FileProcessor fileProcessor = new FileProcessor("src\\main\\resources\\Skill.txt");
+    private FileProcessor fileProcessor = new FileProcessor("src\\main\\resources\\skills.txt");
 
-    public Skill readByID(Long id) {
+    public Skill getByID(Long id) {
         Skill skill = null;
         try {
             for (String line : fileProcessor.readFile()) {
@@ -29,7 +29,7 @@ public class SkillRepositoryImpl implements SkillRepository {
         return skill;
     }
 
-    public List<Skill> readAll() {
+    public List<Skill> getAll() {
         List<Skill> skills = new ArrayList<Skill>();
         try {
             for (String line : fileProcessor.readFile()) {
@@ -44,27 +44,47 @@ public class SkillRepositoryImpl implements SkillRepository {
         return skills;
     }
 
-    public void create(Skill skill) {
-        List<Skill> skills = readAll();
+    public Long getLastId() throws ChangesRejectedException {
+        List<String> entities = fileProcessor.readFile();
+        if (entities.size() == 0) {
+            return 0L;
+        }
+        long[] IDs = new long[entities.size()];
+        for (int i = 0; i < entities.size(); i++) {
+            IDs[i] = deserialize(entities.get(i)).getId();
+        }
+        long max = IDs[0];
+        for (long item : IDs) {
+            if (item > max) {
+                max = item;
+            }
+        }
+        return max;
+    }
+
+    public Skill create(Skill skill) {
+        List<Skill> skills = getAll();
         skills.add(skill);
         serialize(skills);
+        return skill;
     }
 
     public void delete(Skill skill) {
-        List<Skill> skills = readAll();
+        List<Skill> skills = getAll();
         if (skills.remove(skill)) {
             serialize(skills);
         }
     }
 
-    public void update(Skill updatedSkill) throws NoSuchElementException {
-        List<Skill> skills = readAll();
+    public Skill update(Skill updatedSkill) throws NoSuchElementException {
+        List<Skill> skills = getAll();
         boolean updated = skills.removeIf(skill -> skill.getId().equals(updatedSkill.getId()));
         if (!updated) {
             throw new NoSuchElementException();
         }
         skills.add(updatedSkill);
         serialize(skills);
+        return updatedSkill;
     }
 
     private void serialize(Collection<Skill> collection) {

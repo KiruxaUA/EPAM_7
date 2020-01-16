@@ -1,7 +1,5 @@
 package ua.epam6.IOCRUD.controller;
 
-import ua.epam6.IOCRUD.exceptions.ChangesRejectedException;
-import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.model.AccountStatus;
 import ua.epam6.IOCRUD.model.Developer;
@@ -25,7 +23,7 @@ public class DeveloperController {
         developerRepository = new DeveloperRepositoryImpl(skillRepository, accountRepository);
     }
 
-    public String getAll() throws NoSuchElementException {
+    public String getAll() {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (Developer developer : developerRepository.getAll()) {
@@ -35,8 +33,8 @@ public class DeveloperController {
         return stringBuilder.toString();
     }
 
-    public String getById(long id) throws NoSuchElementException {
-        Developer developer = developerRepository.getByID(id);
+    public String getById(long id) {
+        Developer developer = developerRepository.getById(id);
         if (developer == null) {
             return "Developer not found";
         }
@@ -45,12 +43,11 @@ public class DeveloperController {
         }
     }
 
-    public String addNewDeveloper(String name, String accountData, Set<Long> skillsId)
-            throws ChangesRejectedException, NoSuchElementException {
+    public String addNewDeveloper(String name, String accountData, Set<Long> skillsId) {
         Long id = developerRepository.getLastId() + 1;
         Set<Skill> skills = new HashSet<>();
         for (Long skillId : skillsId) {
-            Skill skill = skillRepository.getByID(skillId);
+            Skill skill = skillRepository.getById(skillId);
             if (skill != null) {
                 skills.add(skill);
             }
@@ -66,5 +63,57 @@ public class DeveloperController {
             developerRepository.create(developer);
             return "Operation completed successfully";
         }
+    }
+
+    public String setAccount(long devId, long accId) {
+        Developer developer = developerRepository.getById(devId);
+        Account account = accountRepository.getById(accId);
+        if (developer == null || account == null) {
+            return "Operation failed";
+        }
+        else {
+            developer.setAccount(account);
+            developerRepository.create(developer);
+            return "Operation completed successfully";
+        }
+    }
+
+    public String setSkills(long devId, List<Long> skillIds) {
+        Developer developer = developerRepository.getById(devId);
+        if (developer == null) {
+            return "Operation failed";
+        }
+        Set<Skill> skills = new HashSet<>();
+        for (Long skillId : skillIds) {
+            Skill skill = skillRepository.getById(skillId);
+            if (skill != null) {
+                skills.add(skill);
+            }
+        }
+        developer.setSkills(skills);
+        developerRepository.create(developer);
+        return "Operation completed successfully";
+    }
+
+    public String getAllAccounts() {
+        StringBuilder stringBuilder = new StringBuilder();
+        List<Account> accounts = accountRepository.getAll();
+        for (Account account : accounts) {
+            stringBuilder.append(account.getId());
+            stringBuilder.append(": ");
+            stringBuilder.append(account.getAccountStatus());
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
+    }
+
+    public String getAllSkills() {
+        StringBuilder stringBuilder = new StringBuilder();
+        List<Skill> skills = skillRepository.getAll();
+        for (Skill skill : skills) {
+            stringBuilder.append(skill);
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
     }
 }

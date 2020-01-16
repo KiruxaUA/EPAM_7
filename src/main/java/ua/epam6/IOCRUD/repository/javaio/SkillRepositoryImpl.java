@@ -1,6 +1,6 @@
 package ua.epam6.IOCRUD.repository.javaio;
 
-import ua.epam6.IOCRUD.exceptions.ChangesRejectedException;
+import ua.epam6.IOCRUD.exceptions.FileProcessingException;
 import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
 import ua.epam6.IOCRUD.model.Skill;
 import ua.epam6.IOCRUD.repository.SkillRepository;
@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SkillRepositoryImpl implements SkillRepository {
-    private FileProcessor fileProcessor = new FileProcessor("src\\main\\resources\\skills.txt");
+    private FileProcessor fileProcessor = new FileProcessor("src\\main\\resources\\files\\skills.txt");
 
-    public Skill getByID(Long id) {
+    public Skill getById(Long id) {
         Skill skill = null;
         try {
             for (String line : fileProcessor.readFile()) {
@@ -23,14 +23,14 @@ public class SkillRepositoryImpl implements SkillRepository {
                     break;
                 }
             }
-        } catch (ChangesRejectedException e) {
-            e.printStackTrace();
+        } catch (FileProcessingException e) {
+            e.getMessage();
         }
         return skill;
     }
 
     public List<Skill> getAll() {
-        List<Skill> skills = new ArrayList<Skill>();
+        List<Skill> skills = new ArrayList<>();
         try {
             for (String line : fileProcessor.readFile()) {
                 Skill skill = deserialize(line);
@@ -38,28 +38,36 @@ public class SkillRepositoryImpl implements SkillRepository {
                     skills.add(skill);
                 }
             }
-        } catch (ChangesRejectedException e) {
-            e.printStackTrace();
+        }
+        catch (FileProcessingException e) {
+            e.getMessage();
         }
         return skills;
     }
 
-    public Long getLastId() throws ChangesRejectedException {
-        List<String> entities = fileProcessor.readFile();
-        if (entities.size() == 0) {
-            return 0L;
-        }
-        long[] IDs = new long[entities.size()];
-        for (int i = 0; i < entities.size(); i++) {
-            IDs[i] = deserialize(entities.get(i)).getId();
-        }
-        long max = IDs[0];
-        for (long item : IDs) {
-            if (item > max) {
-                max = item;
+    public Long getLastId() {
+        List<String> entities;
+        try {
+            entities = fileProcessor.readFile();
+            if (entities.size() == 0) {
+                return 0L;
             }
+            long[] IDs = new long[entities.size()];
+            for (int i = 0; i < entities.size(); i++) {
+                IDs[i] = deserialize(entities.get(i)).getId();
+            }
+            long max = IDs[0];
+            for (long item : IDs) {
+                if (item > max) {
+                    max = item;
+                }
+            }
+            return max;
         }
-        return max;
+        catch (FileProcessingException e) {
+            e.getMessage();
+        }
+        return null;
     }
 
     public Skill create(Skill skill) {
@@ -91,8 +99,8 @@ public class SkillRepositoryImpl implements SkillRepository {
         List<String> serialized = collection.stream().map(this::stringify).collect(Collectors.toList());
         try {
             fileProcessor.writeFile(serialized);
-        } catch (ChangesRejectedException e) {
-            e.printStackTrace();
+        } catch (FileProcessingException e) {
+            e.getMessage();
         }
     }
 

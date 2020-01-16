@@ -1,6 +1,5 @@
 package ua.epam6.IOCRUD.controller;
 
-import ua.epam6.IOCRUD.exceptions.ChangesRejectedException;
 import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.model.AccountStatus;
@@ -25,7 +24,7 @@ public class AccountController {
 
 
     public String getById(long id) {
-        Account account = repo.getByID(id);
+        Account account = repo.getById(id);
         if (account == null) {
             return "Account not found";
         }
@@ -34,7 +33,7 @@ public class AccountController {
         }
     }
 
-    public String create(String data) throws ChangesRejectedException {
+    public String create(String data) {
         long id = repo.getLastId() + 1;
         Account account = new Account(id, data, AccountStatus.ACTIVE);
         List<Account> accounts = repo.getAll();
@@ -46,13 +45,13 @@ public class AccountController {
         }
     }
 
+
     public String update(long input, String data) {
         Account account = new Account(input, data, AccountStatus.ACTIVE);
         try {
             repo.update(account);
             return "Operation completed successfully";
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
             return "Operation failed";
         }
     }

@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS Accounts (
 CREATE TABLE IF NOT EXISTS Developers (
     Id INT PRIMARY KEY AUTO_INCREMENT UNIQUE NOT NULL,
     FirstName Varchar(255) NOT NULL,
-    SecondName Varchar(255) NOT NULL,
+    LastName Varchar(255) NOT NULL,
     AccountId INT,
     FOREIGN KEY (AccountId) REFERENCES Accounts(Id)
 );

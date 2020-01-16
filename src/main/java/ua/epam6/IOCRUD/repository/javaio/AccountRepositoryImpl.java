@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AccountRepositoryImpl implements AccountRepository {
-    private FileProcessor fileProcessor = new FileProcessor("src\\main\\resources\\accounts.txt");
+    private FileProcessor fileProcessor = new FileProcessor("src\\main\\resources\\files\\accounts.txt");
 
-    public Account getByID(Long id) {
+    public Account getById(Long id) {
         Account account = null;
         try {
             for(String line: fileProcessor.readFile()) {
@@ -23,14 +23,14 @@ public class AccountRepositoryImpl implements AccountRepository {
                     break;
                 }
             }
-        } catch (ChangesRejectedException e) {
-            e.printStackTrace();
+        } catch (FileProcessingException e) {
+            e.getMessage();
         }
         return account;
     }
 
     public List<Account> getAll() {
-        List<Account> accounts = new ArrayList<Account>();
+        List<Account> accounts = new ArrayList<>();
         try {
             for (String line : fileProcessor.readFile()) {
                 Account account = deserialize(line);
@@ -38,31 +38,38 @@ public class AccountRepositoryImpl implements AccountRepository {
                     accounts.add(account);
                 }
             }
-        } catch (ChangesRejectedException e) {
-            e.printStackTrace();
+        } catch (FileProcessingException e) {
+            e.getMessage();
         }
         return accounts;
     }
 
-    public Long getLastId() throws ChangesRejectedException {
-        List<String> entities = fileProcessor.readFile();
-        if (entities.size() == 0) {
-            return 0L;
-        }
-        long[] IDs = new long[entities.size()];
-        for (int i = 0; i < entities.size(); i++) {
-            IDs[i] = deserialize(entities.get(i)).getId();
-        }
-        long max = IDs[0];
-        for (long item : IDs) {
-            if (item > max) {
-                max = item;
+    public Long getLastId() {
+        List<String> entities;
+        try {
+            entities = fileProcessor.readFile();
+            if (entities.size() == 0) {
+                return 0L;
             }
+            long[] IDs = new long[entities.size()];
+            for (int i = 0; i < entities.size(); i++) {
+                IDs[i] = deserialize(entities.get(i)).getId();
+            }
+            long max = IDs[0];
+            for (long item : IDs) {
+                if (item > max) {
+                    max = item;
+                }
+            }
+            return max;
         }
-        return max;
+        catch (FileProcessingException e) {
+            e.getMessage();
+        }
+        return null;
     }
 
-    public Account create(Account account) {
+    public Account create(Account account)  {
         List<Account> accounts = getAll();
         accounts.add(account);
         serialize(accounts);
@@ -95,8 +102,8 @@ public class AccountRepositoryImpl implements AccountRepository {
         List<String> serialized = collection.stream().map(this::stringify).collect(Collectors.toList());
         try {
             fileProcessor.writeFile(serialized);
-        } catch (ChangesRejectedException e) {
-            e.printStackTrace();
+        } catch (FileProcessingException e) {
+            e.getMessage();
         }
     }
 

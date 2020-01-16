@@ -1,6 +1,6 @@
 package ua.epam6.IOCRUD.repository.javaio;
 
-import ua.epam6.IOCRUD.exceptions.ChangesRejectedException;
+import ua.epam6.IOCRUD.exceptions.FileProcessingException;
 import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.model.Developer;
@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class DeveloperRepositoryImpl implements DeveloperRepository {
-    private FileProcessor fileProcessor = new FileProcessor("src\\main\\resources\\developers.txt");
+    private FileProcessor fileProcessor = new FileProcessor("src\\main\\resources\\files\\developers.txt");
     private AccountRepository accountRepository;
     private SkillRepository skillRepository;
 
@@ -23,7 +23,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         this.skillRepository = skillRepository;
     }
 
-    public Developer getByID(Long id) throws NoSuchElementException {
+    public Developer getById(Long id) {
         Developer developer = null;
         try {
             for (String line : fileProcessor.readFile()) {
@@ -31,32 +31,39 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
                     developer = deserialize(line);
                 }
             }
-        } catch (ChangesRejectedException e) {
-            e.printStackTrace();
+        } catch (FileProcessingException e) {
+            e.getMessage();
         }
         return developer;
     }
 
-    public Long getLastId() throws ChangesRejectedException, NoSuchElementException {
-        List<String> entities = fileProcessor.readFile();
-        if (entities.size() == 0) {
-            return 0L;
-        }
-        long[] IDs = new long[entities.size()];
-        for (int i = 0; i < entities.size(); i++) {
-            IDs[i] = deserialize(entities.get(i)).getId();
-        }
-        long max = IDs[0];
-        for (long item : IDs) {
-            if (item > max) {
-                max = item;
+    public Long getLastId() {
+        List<String> entities;
+        try {
+            entities = fileProcessor.readFile();
+            if (entities.size() == 0) {
+                return 0L;
             }
+            long[] IDs = new long[entities.size()];
+            for (int i = 0; i < entities.size(); i++) {
+                IDs[i] = deserialize(entities.get(i)).getId();
+            }
+            long max = IDs[0];
+            for (long item : IDs) {
+                if (item > max) {
+                    max = item;
+                }
+            }
+            return max;
         }
-        return max;
+        catch (FileProcessingException e) {
+            e.getMessage();
+        }
+        return null;
     }
 
-    public List<Developer> getAll() throws NoSuchElementException {
-        List<Developer> list = new ArrayList<Developer>();
+    public List<Developer> getAll() {
+        List<Developer> list = new ArrayList<>();
         try {
             for (String line : fileProcessor.readFile()) {
                 Developer developer = deserialize(line);
@@ -64,20 +71,20 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
                     list.add(developer);
                 }
             }
-        } catch (ChangesRejectedException e) {
-            e.printStackTrace();
+        } catch (FileProcessingException e) {
+            e.getMessage();
         }
         return list;
     }
 
-    public Developer create(Developer developer) throws NoSuchElementException {
+    public Developer create(Developer developer) {
         List<Developer> developers = getAll();
         developers.add(developer);
         serialize(developers);
         return developer;
     }
 
-    public void delete(Developer developer) throws NoSuchElementException {
+    public void delete(Developer developer) {
         List<Developer> developers = getAll();
         if (developers.remove(developer)) {
             serialize(developers);
@@ -99,16 +106,16 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         List<String> serialized = collection.stream().map(this::stringify).collect(Collectors.toList());
         try {
             fileProcessor.writeFile(serialized);
-        } catch (ChangesRejectedException e) {
-            e.printStackTrace();
+        } catch (FileProcessingException e) {
+            e.getMessage();
         }
     }
 
-    private Developer deserialize(String line) throws NoSuchElementException {
+    private Developer deserialize(String line) {
         Long id = null;
         String name = null;
         Account account = null;
-        Set<Skill> skills = new HashSet<Skill>();
+        Set<Skill> skills = new HashSet<>();
 
         String[] tokens = line.split("/");
         for (String token : tokens) {
@@ -119,12 +126,12 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
                 name = token.substring(5);
             }
             if (token.startsWith("account:")) {
-                account = accountRepository.getByID(Long.parseLong(token.substring(8)));
+                account = accountRepository.getById(Long.parseLong(token.substring(8)));
             }
             if (token.startsWith("skills:")) {
                 String[] numbers = token.substring(7).split(",");
                 for (String number : numbers) {
-                    skills.add(skillRepository.getByID(Long.parseLong(number)));
+                    skills.add(skillRepository.getById(Long.parseLong(number)));
                 }
             }
         }

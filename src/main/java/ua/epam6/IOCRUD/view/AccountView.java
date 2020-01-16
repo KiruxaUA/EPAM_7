@@ -1,11 +1,9 @@
 package ua.epam6.IOCRUD.view;
 
 import ua.epam6.IOCRUD.controller.AccountController;
-import ua.epam6.IOCRUD.exceptions.ChangesRejectedException;
-import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
 import ua.epam6.IOCRUD.utils.InputReader;
 
-public class AccountView {
+class AccountView {
     private InputReader inputReader;
     private AccountController controller = new AccountController();
 
@@ -15,11 +13,11 @@ public class AccountView {
                     "4: Update account\n" +
                     "5: Back to main menu\n";
 
-    public AccountView(InputReader reader) {
+    AccountView(InputReader reader) {
         this.inputReader = reader;
     }
 
-    public boolean run() throws NoSuchElementException, ChangesRejectedException {
+    boolean run() {
         while (true) {
             System.out.println(menu);
             int choice = inputReader.getIntInput();

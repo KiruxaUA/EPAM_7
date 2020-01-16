@@ -1,7 +1,5 @@
 package ua.epam6.IOCRUD.view;
 
-import ua.epam6.IOCRUD.exceptions.ChangesRejectedException;
-import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
 import ua.epam6.IOCRUD.repository.SkillRepository;
 import ua.epam6.IOCRUD.repository.javaio.AccountRepositoryImpl;
 import ua.epam6.IOCRUD.repository.javaio.SkillRepositoryImpl;
@@ -20,13 +18,13 @@ public class AppView {
     private String messageChoice = "Choose an option of menu: ";
     private String messageError = "Error occurred while processing option input! Try to fit the rules.";
 
-    public void viewApp() throws NoSuchElementException, ChangesRejectedException {
+    public void viewApp() {
         do {
             System.out.println("1.Developers\n2.Skills\n3.Accounts\n4.Exit");
             switch(validateInput(pattern, messageChoice, messageError)) {
                 case 1:
                     DeveloperView developerView = new DeveloperView(inputReader, skillRepository, accountRepository);
-                    while (developerView.run());
+                    while (!developerView.run());
                     break;
                 case 2:
                     SkillView skillView = new SkillView(inputReader);
@@ -37,6 +35,7 @@ public class AppView {
                     while (!accountView.run());
                     break;
                 case 4:
+                    inputReader.close();
                     System.exit(0);
                 }
         } while(true);

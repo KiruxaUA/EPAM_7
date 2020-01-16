@@ -1,6 +1,5 @@
 package ua.epam6.IOCRUD.controller;
 
-import ua.epam6.IOCRUD.exceptions.ChangesRejectedException;
 import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
 import ua.epam6.IOCRUD.model.Skill;
 import ua.epam6.IOCRUD.repository.javaio.SkillRepositoryImpl;
@@ -23,7 +22,7 @@ public class SkillController {
     }
 
     public String getById(long id) {
-        Skill skill = repo.getByID(id);
+        Skill skill = repo.getById(id);
         if (skill == null) {
             return "Skill not found";
         } else {
@@ -31,10 +30,10 @@ public class SkillController {
         }
     }
 
-    public String addNewSkill(String name) throws ChangesRejectedException {
+    public String addNewSkill(String name) {
         Long id = repo.getLastId() + 1;
-        Skill skill = new Skill(id, name);
         List<Skill> skills = repo.getAll();
+        Skill skill = new Skill(id, name);
         if (skills.contains(skill)) {
             return "Skill already exists";
         } else {
@@ -49,9 +48,19 @@ public class SkillController {
             repo.update(skill);
             return "Operation completed successfully";
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
+            e.getMessage();
             return "Operation failed";
         }
     }
 
+    public String delete(long input) {
+        Skill skill = repo.getById(input);
+        List<Skill> skills = repo.getAll();
+        if (skills.remove(skill)) {
+            return "Operation completed successfully";
+        }
+        else {
+            return "Operation failed";
+        }
+    }
 }

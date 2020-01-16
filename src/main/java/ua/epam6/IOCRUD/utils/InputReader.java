@@ -7,15 +7,17 @@ public class InputReader {
 
     public int getIntInput() {
         int result;
-        do {
+        while(true) {
             System.out.print("Your choice: ");
-            while (!scanner.hasNextInt()) {
-                System.out.println("\nWrong input");
+            if(scanner.hasNextInt()) {
+                result = scanner.nextInt();
+                return result;
+            }
+            else {
+                System.out.println("Wrong input");
                 scanner.next();
             }
-            result = scanner.nextInt();
-        } while (result < 1);
-        return result;
+        }
     }
 
     public String getStringInput() {

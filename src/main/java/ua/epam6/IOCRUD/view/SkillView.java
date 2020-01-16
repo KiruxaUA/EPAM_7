@@ -1,10 +1,9 @@
 package ua.epam6.IOCRUD.view;
 
 import ua.epam6.IOCRUD.controller.SkillController;
-import ua.epam6.IOCRUD.exceptions.ChangesRejectedException;
 import ua.epam6.IOCRUD.utils.InputReader;
 
-public class SkillView {
+class SkillView {
     private InputReader inputReader;
     private SkillController controller = new SkillController();
 
@@ -14,11 +13,11 @@ public class SkillView {
             "4: Update skill\n" +
             "5: Back to main menu\n";
 
-    public SkillView(InputReader reader) {
+    SkillView(InputReader reader) {
         this.inputReader = reader;
     }
 
-    public boolean run() throws ChangesRejectedException {
+    boolean run() {
         while (true) {
             System.out.println(menu);
             int choice = inputReader.getIntInput();
@@ -29,7 +28,7 @@ public class SkillView {
                     break;
                 }
                 case 2: {
-                    System.out.print("Enter ID of the skill: ");
+                    System.out.println("Enter ID of the skill: ");
                     int input = inputReader.getIntInput();
                     System.out.println(controller.getById(input));
                     break;

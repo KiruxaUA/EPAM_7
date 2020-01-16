@@ -1,16 +1,16 @@
 package ua.epam6.IOCRUD.view;
 
 import ua.epam6.IOCRUD.controller.DeveloperController;
-import ua.epam6.IOCRUD.exceptions.ChangesRejectedException;
-import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
 import ua.epam6.IOCRUD.repository.SkillRepository;
 import ua.epam6.IOCRUD.repository.javaio.AccountRepositoryImpl;
 import ua.epam6.IOCRUD.utils.InputReader;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class DeveloperView {
+class DeveloperView {
     private InputReader inputReader;
     private DeveloperController controller;
     private String menu = "1: Get data of dev's\n" +
@@ -19,12 +19,12 @@ public class DeveloperView {
             "4: Update dev's data\n" +
             "5: Back to main menu\n";
 
-    public DeveloperView(InputReader reader, SkillRepository skillRepository, AccountRepositoryImpl accountRepository) {
+    DeveloperView(InputReader reader, SkillRepository skillRepository, AccountRepositoryImpl accountRepository) {
         this.inputReader = reader;
         this.controller = new DeveloperController(skillRepository, accountRepository);
     }
 
-    public boolean run() throws NoSuchElementException, ChangesRejectedException {
+    boolean run() {
         while (true) {
             System.out.println(menu);
             int choice = inputReader.getIntInput();
@@ -59,13 +59,15 @@ public class DeveloperView {
         }
     }
 
-    private void create() throws NoSuchElementException, ChangesRejectedException {
+    private void create() {
         System.out.println("Enter developer's name: ");
         String name = inputReader.getStringInput();
-        System.out.println("Enter data of developer`s account");
+        System.out.println("Enter data of developer`s account: ");
         String accountData = inputReader.getStringInput();
+        System.out.println("Enter developer`s skill(s): ");
+
         long skillChoice;
-        Set<Long> skillsId = new HashSet<Long>();
+        Set<Long> skillsId = new HashSet<>();
         while ((skillChoice = inputReader.getIntInput()) != 0) {
             skillsId.add(skillChoice);
         }
@@ -73,13 +75,22 @@ public class DeveloperView {
     }
 
     private void update() {
-        System.out.println("Enter developer's name: ");
+        System.out.println("Enter ID of developer: ");
         int devId = inputReader.getIntInput();
-        System.out.println("Choose id of dev`s skills: ");
-        Set<Long> skillsId = new HashSet<Long>();
-        long skillChoice;
-        while ((skillChoice = inputReader.getIntInput()) != 0) {
-            skillsId.add(skillChoice);
-        }
+        System.out.println(controller.getAllAccounts());
+        System.out.println("AccountMessage ID: ");
+        int accId = inputReader.getIntInput();
+        System.out.println(controller.setAccount(devId, accId));
+
+        List<Long> skillIds = new ArrayList<>();
+        System.out.println("Enter skills ID`s or 0 to end input");
+        long id;
+        do {
+            id = inputReader.getIntInput();
+            if (id > 0) {
+                skillIds.add(id);
+            }
+        } while (id != 0);
+        System.out.println(controller.setSkills(devId, skillIds));
     }
 }

@@ -84,9 +84,10 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         return developer;
     }
 
-    public void delete(Developer developer) {
+    public void delete(Long ID) {
         List<Developer> developers = getAll();
-        if (developers.remove(developer)) {
+        Developer searchedDeveloper = developers.stream().filter(e -> e.getId().equals(ID)).findAny().get();
+        if (developers.remove(searchedDeveloper)) {
             serialize(developers);
         }
     }
@@ -113,7 +114,8 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
 
     private Developer deserialize(String line) {
         Long id = null;
-        String name = null;
+        String firstName = null;
+        String lastName = null;
         Account account = null;
         Set<Skill> skills = new HashSet<>();
 
@@ -122,8 +124,11 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
             if (token.startsWith("id:")) {
                 id = Long.parseLong(token.substring(3));
             }
-            if (token.startsWith("name:")) {
-                name = token.substring(5);
+            if (token.startsWith("firstName:")) {
+                firstName = token.substring(10);
+            }
+            if (token.startsWith("lastName:")) {
+                lastName = token.substring(9);
             }
             if (token.startsWith("account:")) {
                 account = accountRepository.getById(Long.parseLong(token.substring(8)));
@@ -135,13 +140,13 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
                 }
             }
         }
-        return new Developer(id, name, skills, account);
+        return new Developer(id, firstName, lastName, skills, account);
     }
 
     private String stringify(Developer developer) {
         StringBuilder stringBuilder = new StringBuilder();
-        String str = "id:" + developer.getId() + "/name:" + developer.getName() + "/account:"
-                + developer.getAccount().getId() + "/skills:";
+        String str = "id:" + developer.getId() + "/firstName:" + developer.getFirstName() + "/lastName" +
+                "/account:" + developer.getAccount().getId() + "/skills:";
         stringBuilder.append(str);
         for (Skill skill : developer.getSkills()) {
             stringBuilder.append(skill.getId());

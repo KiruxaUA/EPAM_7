@@ -1,30 +1,34 @@
 package ua.epam6.IOCRUD.controller;
 
-import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
+import org.apache.log4j.Logger;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.model.AccountStatus;
-import ua.epam6.IOCRUD.repository.javaio.AccountRepositoryImpl;
+import ua.epam6.IOCRUD.service.AccountService;
 
 import java.util.List;
 
 public class AccountController {
-    private AccountRepositoryImpl repo = new AccountRepositoryImpl();
+    private static final Logger log = Logger.getLogger(AccountController.class);
+    private AccountService service = new AccountService();
 
     public String getAll() {
         StringBuilder stringBuilder = new StringBuilder();
-        List<Account> accounts = repo.getAll();
-
-        for (Account account : accounts) {
-            stringBuilder.append(account);
-            stringBuilder.append("\n");
+        List<Account> accounts = service.getAll();
+        if (accounts == null) {
+            return "Accounts not found";
         }
-
+        else {
+            for (Account account : accounts) {
+                stringBuilder.append(account);
+                stringBuilder.append("\n");
+            }
+        }
         return stringBuilder.toString();
     }
 
 
     public String getById(long id) {
-        Account account = repo.getById(id);
+        Account account = service.getById(id);
         if (account == null) {
             return "Account not found";
         }
@@ -34,13 +38,12 @@ public class AccountController {
     }
 
     public String create(String data) {
-        long id = repo.getLastId() + 1;
-        Account account = new Account(id, data, AccountStatus.ACTIVE);
-        List<Account> accounts = repo.getAll();
+        Account account = new Account(null, data, AccountStatus.ACTIVE);
+        List<Account> accounts = service.getAll();
         if (accounts.contains(account)) {
             return "Account already exist!";
         } else {
-            repo.create(account);
+            service.create(account);
             return "Account created";
         }
     }
@@ -49,9 +52,20 @@ public class AccountController {
     public String update(long input, String data) {
         Account account = new Account(input, data, AccountStatus.ACTIVE);
         try {
-            repo.update(account);
+            service.update(account);
             return "Operation completed successfully";
-        } catch (NoSuchElementException e) {
+        } catch (Exception e) {
+            log.error("Error occurred while updating record(MySQL)");
+            return "Operation failed";
+        }
+    }
+
+    public String delete(long ID) {
+        try {
+            service.delete(ID);
+            return "Operation completed successfully";
+        } catch (Exception e) {
+            log.error("Error occurred while deleting record(MySQL)");
             return "Operation failed";
         }
     }

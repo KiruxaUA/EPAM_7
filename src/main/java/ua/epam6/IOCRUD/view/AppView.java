@@ -1,8 +1,5 @@
 package ua.epam6.IOCRUD.view;
 
-import ua.epam6.IOCRUD.repository.SkillRepository;
-import ua.epam6.IOCRUD.repository.javaio.AccountRepositoryImpl;
-import ua.epam6.IOCRUD.repository.javaio.SkillRepositoryImpl;
 import ua.epam6.IOCRUD.utils.InputReader;
 
 import java.util.Scanner;
@@ -11,8 +8,6 @@ public class AppView {
     private static Scanner scanner = new Scanner(System.in);
 
     private InputReader inputReader = new InputReader();
-    private SkillRepository skillRepository = new SkillRepositoryImpl();
-    private AccountRepositoryImpl accountRepository = new AccountRepositoryImpl();
 
     private String pattern = "[1234]";
     private String messageChoice = "Choose an option of menu: ";
@@ -23,7 +18,7 @@ public class AppView {
             System.out.println("1.Developers\n2.Skills\n3.Accounts\n4.Exit");
             switch(validateInput(pattern, messageChoice, messageError)) {
                 case 1:
-                    DeveloperView developerView = new DeveloperView(inputReader, skillRepository, accountRepository);
+                    DeveloperView developerView = new DeveloperView(inputReader);
                     while (!developerView.run());
                     break;
                 case 2:

@@ -11,7 +11,8 @@ class SkillView {
             "2: Get skill by ID\n" +
             "3: Add new skill\n" +
             "4: Update skill\n" +
-            "5: Back to main menu\n";
+            "5: Delete new skill\n" +
+            "6: Back to main menu";
 
     SkillView(InputReader reader) {
         this.inputReader = reader;
@@ -29,8 +30,8 @@ class SkillView {
                 }
                 case 2: {
                     System.out.println("Enter ID of the skill: ");
-                    int input = inputReader.getIntInput();
-                    System.out.println(controller.getById(input));
+                    int ID = inputReader.getIntInput();
+                    System.out.println(controller.getById(ID));
                     break;
                 }
                 case 3: {
@@ -41,13 +42,18 @@ class SkillView {
                 }
                 case 4: {
                     System.out.println("Enter ID of the skill: ");
-                    int input = inputReader.getIntInput();
+                    int ID = inputReader.getIntInput();
                     System.out.println("Enter the name of the skill");
                     String name = inputReader.getStringInput();
-                    System.out.println(controller.update(input, name));
+                    System.out.println(controller.update(ID, name));
                     break;
                 }
                 case 5: {
+                    System.out.println("Enter ID of the skill: ");
+                    int ID = inputReader.getIntInput();
+                    System.out.println(controller.delete(ID));
+                }
+                case 6: {
                     return true;
                 }
                 default: {

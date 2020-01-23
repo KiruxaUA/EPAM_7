@@ -1,17 +1,18 @@
 package ua.epam6.IOCRUD.controller;
 
-import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
+import org.apache.log4j.Logger;
 import ua.epam6.IOCRUD.model.Skill;
-import ua.epam6.IOCRUD.repository.javaio.SkillRepositoryImpl;
+import ua.epam6.IOCRUD.service.SkillService;
 
 import java.util.List;
 
 public class SkillController {
-    private SkillRepositoryImpl repo = new SkillRepositoryImpl();
+    private static final Logger log = Logger.getLogger(AccountController.class);
+    private SkillService service = new SkillService();
 
     public String getAll() {
         StringBuilder stringBuilder = new StringBuilder();
-        List<Skill> skills = repo.getAll();
+        List<Skill> skills = service.getAll();
 
         for (Skill skill : skills) {
             stringBuilder.append(skill);
@@ -22,7 +23,7 @@ public class SkillController {
     }
 
     public String getById(long id) {
-        Skill skill = repo.getById(id);
+        Skill skill = service.getById(id);
         if (skill == null) {
             return "Skill not found";
         } else {
@@ -31,13 +32,12 @@ public class SkillController {
     }
 
     public String addNewSkill(String name) {
-        Long id = repo.getLastId() + 1;
-        List<Skill> skills = repo.getAll();
-        Skill skill = new Skill(id, name);
+        List<Skill> skills = service.getAll();
+        Skill skill = new Skill(null, name);
         if (skills.contains(skill)) {
             return "Skill already exists";
         } else {
-            repo.create(skill);
+            service.create(skill);
             return "Skill added to repository";
         }
     }
@@ -45,21 +45,20 @@ public class SkillController {
     public String update(long id, String name) {
         Skill skill = new Skill(id, name);
         try {
-            repo.update(skill);
+            service.update(skill);
             return "Operation completed successfully";
-        } catch (NoSuchElementException e) {
-            e.getMessage();
+        } catch (Exception e) {
+            log.error("Error occurred while updating record(MySQL)");
             return "Operation failed";
         }
     }
 
-    public String delete(long input) {
-        Skill skill = repo.getById(input);
-        List<Skill> skills = repo.getAll();
-        if (skills.remove(skill)) {
+    public String delete(long ID) {
+        try {
+            service.delete(ID);
             return "Operation completed successfully";
-        }
-        else {
+        } catch (Exception e) {
+            log.error("Error occurred while deleting record(MySQL)");
             return "Operation failed";
         }
     }

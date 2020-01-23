@@ -1,8 +1,6 @@
 package ua.epam6.IOCRUD.view;
 
 import ua.epam6.IOCRUD.controller.DeveloperController;
-import ua.epam6.IOCRUD.repository.SkillRepository;
-import ua.epam6.IOCRUD.repository.javaio.AccountRepositoryImpl;
 import ua.epam6.IOCRUD.utils.InputReader;
 
 import java.util.ArrayList;
@@ -12,17 +10,17 @@ import java.util.Set;
 
 class DeveloperView {
     private InputReader inputReader;
-    private DeveloperController controller;
-    private String menu = "1: Get data of dev's\n" +
-            "2: Get dev's data by id\n" +
-            "3: Add new developer\n" +
-            "4: Update dev's data\n" +
-            "5: Back to main menu\n";
+    private DeveloperController controller = new DeveloperController();
 
-    DeveloperView(InputReader reader, SkillRepository skillRepository, AccountRepositoryImpl accountRepository) {
-        this.inputReader = reader;
-        this.controller = new DeveloperController(skillRepository, accountRepository);
+    DeveloperView(InputReader inputReader) {
+        this.inputReader = inputReader;
     }
+
+    private String menu = "1: Get developers\n" +
+            "2: Get developers by id\n" +
+            "3: Add new developer\n" +
+            "4: Set developer's skills\n" +
+            "5: Back to main menu";
 
     boolean run() {
         while (true) {
@@ -60,18 +58,19 @@ class DeveloperView {
     }
 
     private void create() {
-        System.out.println("Enter developer's name: ");
-        String name = inputReader.getStringInput();
+        System.out.println("Enter developer's first name: ");
+        String firstName = inputReader.getStringInput();
+        System.out.println("Enter developer's last name: ");
+        String lastName = inputReader.getStringInput();
         System.out.println("Enter data of developer`s account: ");
         String accountData = inputReader.getStringInput();
         System.out.println("Enter developer`s skill(s): ");
-
         long skillChoice;
         Set<Long> skillsId = new HashSet<>();
         while ((skillChoice = inputReader.getIntInput()) != 0) {
             skillsId.add(skillChoice);
         }
-        System.out.println(controller.addNewDeveloper(name, accountData, skillsId));
+        System.out.println(controller.addNewDeveloper(firstName, lastName, accountData, skillsId));
     }
 
     private void update() {
@@ -81,9 +80,9 @@ class DeveloperView {
         System.out.println("AccountMessage ID: ");
         int accId = inputReader.getIntInput();
         System.out.println(controller.setAccount(devId, accId));
-
         List<Long> skillIds = new ArrayList<>();
         System.out.println("Enter skills ID`s or 0 to end input");
+        System.out.println(controller.getAllSkills());
         long id;
         do {
             id = inputReader.getIntInput();

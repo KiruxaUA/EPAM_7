@@ -8,6 +8,6 @@ public interface GenericRepository<T, ID> {
     T create(T t) throws NoSuchElementException;
     T getById(ID id);
     T update(T t) throws NoSuchElementException;
-    void delete(T t) throws NoSuchElementException;
+    void delete(ID t) throws NoSuchElementException;
     List<T> getAll();
 }

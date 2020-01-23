@@ -11,7 +11,8 @@ class AccountView {
                     "2: Get data from a specific account\n" +
                     "3: Add new account\n" +
                     "4: Update account\n" +
-                    "5: Back to main menu\n";
+                    "5: Delete account\n" +
+                    "6: Back to main menu";
 
     AccountView(InputReader reader) {
         this.inputReader = reader;
@@ -29,8 +30,8 @@ class AccountView {
                 }
                 case 2: {
                     System.out.println("Enter ID of the account: ");
-                    int input = inputReader.getIntInput();
-                    System.out.println(controller.getById(input));
+                    int ID = inputReader.getIntInput();
+                    System.out.println(controller.getById(ID));
                     break;
                 }
                 case 3: {
@@ -41,13 +42,18 @@ class AccountView {
                 }
                 case 4: {
                     System.out.println("Enter ID of the account: ");
-                    int input = inputReader.getIntInput();
+                    int ID = inputReader.getIntInput();
                     System.out.println("Input account of data: ");
                     String data = inputReader.getStringInput();
-                    System.out.println(controller.update(input, data));
+                    System.out.println(controller.update(ID, data));
                     break;
                 }
                 case 5: {
+                    System.out.println("Enter ID of the account: ");
+                    int ID = inputReader.getIntInput();
+                    System.out.println(controller.delete(ID));
+                }
+                case 6: {
                     return true;
                 }
                 default: {
@@ -57,5 +63,4 @@ class AccountView {
             }
         }
     }
-
 }

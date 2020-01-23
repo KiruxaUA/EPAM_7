@@ -77,9 +77,10 @@ public class SkillRepositoryImpl implements SkillRepository {
         return skill;
     }
 
-    public void delete(Skill skill) {
+    public void delete(Long ID) {
         List<Skill> skills = getAll();
-        if (skills.remove(skill)) {
+        Skill searchedSkill = skills.stream().filter(e -> e.getId().equals(ID)).findAny().get();
+        if (skills.remove(searchedSkill)) {
             serialize(skills);
         }
     }

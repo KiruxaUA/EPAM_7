@@ -76,9 +76,10 @@ public class AccountRepositoryImpl implements AccountRepository {
         return account;
     }
 
-    public void delete(Account account) {
+    public void delete(Long ID) {
         List<Account> accounts = getAll();
-        if (accounts.remove(account)) {
+        Account searchedAccount = accounts.stream().filter(e -> e.getId().equals(ID)).findAny().get();
+        if (accounts.remove(searchedAccount)) {
             serialize(accounts);
         }
     }

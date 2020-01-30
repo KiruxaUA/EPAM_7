@@ -27,6 +27,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         }
     }
 
+    @Override
     public Account create(Account accountModel) {
         try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)){
             statement.setString(1, accountModel.getName());
@@ -41,6 +42,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         return null;
     }
 
+    @Override
     public Account getById(Long ID) {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY)) {
             statement.setLong(1, ID);
@@ -60,6 +62,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         return null;
     }
 
+    @Override
     public Account update(Account updatedModel) {
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             statement.setString(1, updatedModel.getName());
@@ -77,6 +80,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         return updatedModel;
     }
 
+    @Override
     public void delete(Long deleteEntry) {
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, deleteEntry);
@@ -90,6 +94,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         }
     }
 
+    @Override
     public List<Account> getAll() {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY)) {
             ResultSet resultSet = statement.executeQuery();

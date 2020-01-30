@@ -21,13 +21,18 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-class JdbcSkillRepositoryImplTest {
+public class JdbcSkillRepositoryImplTest {
     private static final Logger log = Logger.getLogger(JdbcSkillRepositoryImplTest.class);
-    private static final String PATH_TO_INIT_SCRIPT = "./src/test/resources/db/init.sql";
-    private static final String PATH_TO_POPULATE_SCRIPT = "./src/test/resources/db/populate.sql";
+    private static final String PATH_TO_INIT_SCRIPT = "./src/test/resources/db/initDB.sql";
+    private static final String PATH_TO_POPULATE_SCRIPT = "./src/test/resources/db/populateDB.sql";
+    private static JdbcSkillRepositoryImpl testedRepo;
     private static Connection connection;
-    private List<Skill> allSkill = new ArrayList<>();
-    private static JdbcSkillRepositoryImpl testRepo;
+    private String SELECT_QUERY_CREATE = "SELECT * FROM ioapplication.Skills GROUP BY Id HAVING Max(Id);";
+    private String SELECT_QUERY = "SELECT * FROM ioapplication.Skills WHERE Id = ?;";
+    private Skill createSkill = new Skill(5L, "OCaml");
+    private Skill getSkill = new Skill(2L, "C++");
+    private Skill updateSkill = new Skill(1L, "Kotlin");
+    private List<Skill> allSkills = new ArrayList<>();
 
     @BeforeClass
     public static void connect() {
@@ -37,7 +42,17 @@ class JdbcSkillRepositoryImplTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        testRepo = new JdbcSkillRepositoryImpl();
+        testedRepo = new JdbcSkillRepositoryImpl();
+    }
+
+    @AfterClass
+    public static void backProperty(){
+        TestUtil.toWorkMode();
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Before
@@ -52,68 +67,51 @@ class JdbcSkillRepositoryImplTest {
         }
     }
 
-    @AfterClass
-    public static void rollbackProperties(){
-        TestUtil.toWorkMode();
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Test
     public void checkCreation() {
-        Skill createdSkill = new Skill(5L, "OCaml");
-        String SELECT_QUERY_CREATE = "SELECT * FROM ioapplication.skills GROUP BY Id HAVING MAX(Id);";
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_UPDATABLE)) {
-            testRepo.create(createdSkill);
+                    ResultSet.CONCUR_UPDATABLE)){
+            testedRepo.create(createSkill);
             ResultSet resultSet = statement.executeQuery(SELECT_QUERY_CREATE);
-            assertEquals(createdSkill, new JdbcSkillMapper().map(resultSet, 5L));
-            log.debug("Created skill(test)");
-        }
-        catch (SQLException e) {
+            assertEquals(createSkill, new JdbcSkillMapper().map(resultSet, 5L));
+            log.debug("Create(TEST)");
+        } catch (SQLException e) {
             fail();
         }
     }
 
     @Test
     public void checkGetById() {
-        Skill readSkill = new Skill(1L, "Java");
         try {
-            assertEquals(readSkill, testRepo.getById(1L));
-            log.debug("Got account by ID(test)");
+            assertEquals(getSkill, testedRepo.getById(2L));
+            log.debug("Get(TEST)");
         } catch (Exception e) {
-            e.printStackTrace();
+            fail();
         }
     }
 
     @Test
     public void checkUpdating() {
-        String SELECT_QUERY = "SELECT * FROM ioapplication.skills WHERE Id = ?;";
-        Skill updatedSkill = new Skill(1L, "Rust");
         try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY,
-                ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
-            testRepo.update(updatedSkill);
+                    ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+            testedRepo.update(updateSkill);
             statement.setLong(1, 1);
             ResultSet resultSet = statement.executeQuery();
-            assertEquals(updatedSkill, new JdbcSkillMapper().map(resultSet, 1L));
-            log.debug("Updated account(test)");
+            assertEquals(updateSkill, new JdbcSkillMapper().map(resultSet, 1L));
+            log.debug("Update(TEST)");
         } catch (SQLException e) {
             fail();
         }
     }
 
     @Test
-    public void checkDeleting() {
-        String SELECT_QUERY = "SELECT * FROM ioapplication.skills WHERE Id = ?;";
+    public void checkDelete() {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY,
-                ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
-            testRepo.delete(4L);
+                    ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+            testedRepo.delete(4L);
             statement.setLong(1, 4);
             assertFalse(statement.executeQuery().next());
-            log.debug("Deleted account(test)");
+            log.debug("Delete(TEST)");
         } catch (SQLException e) {
             fail();
         }
@@ -121,14 +119,13 @@ class JdbcSkillRepositoryImplTest {
 
     @Test
     public void checkGetAll() {
-        List<Skill> allAccount = new ArrayList<>();
         try {
-            Collections.addAll(allAccount, new Skill(1L, "Java"),
+            Collections.addAll(allSkills, new Skill(1L, "Java"),
                     new Skill(2L, "C++"),
                     new Skill(3L, "C#"),
                     new Skill(4L, "Python"));
-            assertEquals(allAccount, testRepo.getAll());
-            log.debug("Got all accounts(test)");
+            assertEquals(allSkills, testedRepo.getAll());
+            log.debug("Got all accounts(TEST)");
         } catch (Exception e) {
             fail();
         }

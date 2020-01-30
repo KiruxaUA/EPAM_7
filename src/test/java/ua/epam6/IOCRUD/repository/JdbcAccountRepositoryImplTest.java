@@ -22,12 +22,18 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-class JdbcAccountRepositoryImplTest {
+public class JdbcAccountRepositoryImplTest {
     private static final Logger log = Logger.getLogger(JdbcAccountRepositoryImplTest.class);
-    private static final String PATH_TO_INIT_SCRIPT = "./src/test/resources/db/init.sql";
-    private static final String PATH_TO_POPULATE_SCRIPT = "./src/test/resources/db/populate.sql";
+    private static final String PATH_TO_INIT_SCRIPT = "./src/test/resources/db/initDB.sql";
+    private static final String PATH_TO_POPULATE_SCRIPT = "./src/test/resources/db/populateDB.sql";
+    private static JdbcAccountRepositoryImpl testedRepo;
     private static Connection connection;
-    private static JdbcAccountRepositoryImpl testRepo;
+    private String SELECT_QUERY_CREATE = "SELECT * FROM ioapplication.Accounts GROUP BY Id HAVING Max(Id);";
+    private String SELECT_QUERY = "SELECT * FROM ioapplication.Accounts WHERE Id = ?;";
+    private Account createAccount = new Account(4L, "Alexei", AccountStatus.ACTIVE);
+    private Account getAccount = new Account(2L, "William", AccountStatus.DELETED);
+    private Account updateAccount = new Account(1L, "Max", AccountStatus.BANNED);
+    private List<Account> allAccounts = new ArrayList<>();
 
     @BeforeClass
     public static void connect() {
@@ -37,7 +43,7 @@ class JdbcAccountRepositoryImplTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        testRepo = new JdbcAccountRepositoryImpl();
+        testedRepo = new JdbcAccountRepositoryImpl();
     }
 
     @Before
@@ -64,57 +70,49 @@ class JdbcAccountRepositoryImplTest {
 
     @Test
     public void checkCreation() {
-        Account createdAccount = new Account(4L, "Alexei", AccountStatus.ACTIVE);
-        String SELECT_QUERY_CREATE = "SELECT * FROM ioapplication.accounts GROUP BY Id HAVING MAX(Id);";
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_UPDATABLE)) {
-            testRepo.create(createdAccount);
+                    ResultSet.CONCUR_UPDATABLE)) {
+            testedRepo.create(createAccount);
             ResultSet resultSet = statement.executeQuery(SELECT_QUERY_CREATE);
-            assertEquals(createdAccount, new JdbcAccountMapper().map(resultSet, 4L));
-            log.debug("Created account(test)");
-        }
-        catch (SQLException e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void checkGetById() {
-        Account readAccount = new Account(2L, "William", AccountStatus.DELETED);
-        try {
-            assertEquals(readAccount, testRepo.getById(2L));
-            log.debug("Got account by ID(test)");
-        }
-        catch (Exception e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void checkUpdating() {
-        String SELECT_QUERY = "SELECT * FROM ioapplication.accounts WHERE Id = ?;";
-        Account updatedAccount = new Account(1L, "Barry", AccountStatus.BANNED);
-        try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY,
-                    ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
-            testRepo.update(updatedAccount);
-            statement.setLong(1, 1);
-            ResultSet resultSet = statement.executeQuery();
-            assertEquals(updatedAccount, new JdbcAccountMapper().map(resultSet, 1L));
-            log.debug("Updated account(test)");
+            assertEquals(createAccount, new JdbcAccountMapper().map(resultSet, 5L));
+            log.debug("Create(TEST)");
         } catch (SQLException e) {
             fail();
         }
     }
 
     @Test
-    public void checkDeleting() {
-        String SELECT_QUERY = "SELECT * FROM ioapplication.accounts WHERE Id = ?;";
+    public void checkGetById() {
+        try {
+            assertEquals(getAccount, testedRepo.getById(2L));
+            log.debug("Get(TEST)");
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void checkUpdate() {
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+            testedRepo.update(updateAccount);
+            statement.setLong(1, 1);
+            ResultSet resultSet = statement.executeQuery();
+            assertEquals(updateAccount, new JdbcAccountMapper().map(resultSet, 1L));
+            log.debug("Update(TEST)");
+        } catch (SQLException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void checkDelete() {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY,
                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
-            testRepo.delete(4L);
+            testedRepo.delete(4L);
             statement.setLong(1, 4);
             assertFalse(statement.executeQuery().next());
-            log.debug("Deleted account(test)");
+            log.debug("Delete(TEST)");
         } catch (SQLException e) {
             fail();
         }
@@ -122,13 +120,12 @@ class JdbcAccountRepositoryImplTest {
 
     @Test
     public void checkGetAll() {
-        List<Account> allAccount = new ArrayList<>();
         try {
-            Collections.addAll(allAccount, new Account(1L, "Joe", AccountStatus.ACTIVE),
+            Collections.addAll(allAccounts, new Account(1L, "Joe", AccountStatus.ACTIVE),
                     new Account(2L, "William", AccountStatus.DELETED),
                     new Account(3L, "John", AccountStatus.BANNED));
-            assertEquals(allAccount, testRepo.getAll());
-            log.debug("Got all accounts(test)");
+            assertEquals(allAccounts, testedRepo.getAll());
+            log.debug("Got all accounts(TEST)");
         } catch (Exception e) {
             fail();
         }

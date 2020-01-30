@@ -5,7 +5,7 @@
     <changeSet author="Kiril Kovalenko" id="1">
         <sqlFile path="../db/initDB.sql" relativeToChangelogFile="true"/>
     </changeSet>
-    <changeSet author="Kiril Kovalenko" id="1">
+    <changeSet author="Kiril Kovalenko" id="2">
         <sqlFile path="../db/populateDB.sql" relativeToChangelogFile="true"/>
     </changeSet>
 </databaseChangeLog>

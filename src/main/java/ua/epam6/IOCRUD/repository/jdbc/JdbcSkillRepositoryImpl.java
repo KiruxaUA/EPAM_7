@@ -27,6 +27,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
         }
     }
 
+    @Override
     public Skill create(Skill model) {
         try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)) {
             statement.setString(1, model.getName());
@@ -41,6 +42,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
         return model;
     }
 
+    @Override
     public Skill getById(Long Id) {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY)) {
             statement.setLong(1, Id);
@@ -56,6 +58,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
         }
     }
 
+    @Override
     public Skill update(Skill updatedModel) {
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             statement.setString(1, updatedModel.getName());
@@ -72,6 +75,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
         return updatedModel;
     }
 
+    @Override
     public void delete(Long deleteEntry) {
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, deleteEntry);
@@ -85,6 +89,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
         }
     }
 
+    @Override
     public List<Skill> getAll() {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY)) {
             ResultSet resultSet = statement.executeQuery();

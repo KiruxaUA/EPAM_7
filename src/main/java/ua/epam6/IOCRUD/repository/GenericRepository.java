@@ -1,13 +1,11 @@
 package ua.epam6.IOCRUD.repository;
 
-import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
-
 import java.util.List;
 
 public interface GenericRepository<T, ID> {
-    T create(T t) throws NoSuchElementException;
-    T getById(ID id);
-    T update(T t) throws NoSuchElementException;
-    void delete(ID t) throws NoSuchElementException;
-    List<T> getAll();
+    T create(T t) throws Exception;
+    T getById(ID id) throws Exception;
+    T update(T t) throws Exception;
+    void delete(ID t) throws Exception;
+    List<T> getAll() throws Exception;
 }

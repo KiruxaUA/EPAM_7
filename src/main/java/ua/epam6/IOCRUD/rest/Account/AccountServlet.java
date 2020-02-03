@@ -2,6 +2,7 @@ package ua.epam6.IOCRUD.rest.Account;
 
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
+import ua.epam6.IOCRUD.exceptions.RepoStorageException;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.service.AccountService;
 
@@ -19,9 +20,10 @@ public class AccountServlet extends HttpServlet {
     private Gson gson;
     private AccountService accountService;
 
-    public AccountServlet() {
-        gson = new Gson();
+    @Override
+    public void init() {
         accountService = new AccountService();
+        gson = new Gson();
     }
 
     @Override
@@ -48,7 +50,7 @@ public class AccountServlet extends HttpServlet {
         log.debug("Request create (POST)");
         try {
             accountService.create(gson.fromJson(request.getReader(), Account.class));
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Error in creation request (POST)");
             e.printStackTrace();
         }

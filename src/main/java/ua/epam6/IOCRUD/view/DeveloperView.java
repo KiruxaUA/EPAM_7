@@ -22,7 +22,7 @@ class DeveloperView {
             "4: Set developer's skills\n" +
             "5: Back to main menu";
 
-    boolean run() {
+    boolean run() throws Exception {
         while (true) {
             System.out.println(menu);
             int choice = inputReader.getIntInput();
@@ -57,7 +57,7 @@ class DeveloperView {
         }
     }
 
-    private void create() {
+    private void create() throws Exception {
         System.out.println("Enter developer's first name: ");
         String firstName = inputReader.getStringInput();
         System.out.println("Enter developer's last name: ");
@@ -73,7 +73,7 @@ class DeveloperView {
         System.out.println(controller.addNewDeveloper(firstName, lastName, accountData, skillsId));
     }
 
-    private void update() {
+    private void update() throws Exception {
         System.out.println("Enter ID of developer: ");
         int devId = inputReader.getIntInput();
         System.out.println(controller.getAllAccounts());

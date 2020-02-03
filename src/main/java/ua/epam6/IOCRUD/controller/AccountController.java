@@ -11,7 +11,7 @@ public class AccountController {
     private static final Logger log = Logger.getLogger(AccountController.class);
     private AccountService service = new AccountService();
 
-    public String getAll() {
+    public String getAll() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         List<Account> accounts = service.getAll();
         if (accounts == null) {
@@ -27,7 +27,7 @@ public class AccountController {
     }
 
 
-    public String getById(long id) {
+    public String getById(long id) throws Exception {
         Account account = service.getById(id);
         if (account == null) {
             return "Account not found";
@@ -37,7 +37,7 @@ public class AccountController {
         }
     }
 
-    public String create(String data) {
+    public String create(String data) throws Exception {
         Account account = new Account(null, data, AccountStatus.ACTIVE);
         List<Account> accounts = service.getAll();
         if (accounts.contains(account)) {

@@ -48,7 +48,7 @@ public class DeveloperServlet extends HttpServlet {
         log.debug("Request create (POST)");
         try {
             developerService.create(gson.fromJson(request.getReader(), Developer.class));
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Error in creation request (POST)", e);
             e.printStackTrace();
         }

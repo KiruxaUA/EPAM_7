@@ -1,26 +1,35 @@
-CREATE TABLE IF NOT EXISTS Skills (
-    Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    Name Varchar(255) NOT NULL
+SET SCHEMA PUBLIC;
+DROP TABLE IF EXISTS developer_skill;
+DROP TABLE IF EXISTS developers;
+DROP TABLE IF EXISTS skills;
+DROP TABLE IF EXISTS accounts;
+
+CREATE TABLE IF NOT EXISTS skills (
+    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    name Varchar(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Accounts (
-    Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    Name Varchar(255) NOT NULL,
-    Status Varchar(255)
+CREATE TABLE IF NOT EXISTS accounts (
+    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    name Varchar(255) NOT NULL,
+    status Varchar(255)
 );
 
-CREATE TABLE IF NOT EXISTS Developers (
-    Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    First_Name Varchar(255),
-    Last_Name Varchar(255),
-    Account_Id INT,
-    FOREIGN KEY (Account_Id) REFERENCES Accounts(Id)
+CREATE TABLE IF NOT EXISTS developers (
+    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    first_name Varchar(255),
+    last_name Varchar(255),
+    account_id INT,
+    FOREIGN KEY (account_id) REFERENCES accounts(id)
+    ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Developer_Skill (
-    Developer_Id INT NOT NULL,
-    Skill_Id INT NOT NULL,
-    UNIQUE(Developer_Id, Skill_Id),
-    FOREIGN KEY (Developer_Id) REFERENCES Developers(Id),
-    FOREIGN KEY (Skill_ID) REFERENCES Skills(Id)
+CREATE TABLE IF NOT EXISTS developer_skill (
+    developer_id INT NOT NULL,
+    skill_id INT NOT NULL,
+    UNIQUE (developer_id, skill_id),
+    FOREIGN KEY (developer_id) REFERENCES developers(id)
+    ON DELETE CASCADE,
+    FOREIGN KEY (skill_id) REFERENCES skills(id)
+    ON DELETE CASCADE
 );

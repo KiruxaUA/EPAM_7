@@ -10,7 +10,7 @@ public class SkillController {
     private static final Logger log = Logger.getLogger(AccountController.class);
     private SkillService service = new SkillService();
 
-    public String getAll() {
+    public String getAll() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         List<Skill> skills = service.getAll();
 
@@ -22,7 +22,7 @@ public class SkillController {
         return stringBuilder.toString();
     }
 
-    public String getById(long id) {
+    public String getById(long id) throws Exception {
         Skill skill = service.getById(id);
         if (skill == null) {
             return "Skill not found";
@@ -31,7 +31,7 @@ public class SkillController {
         }
     }
 
-    public String addNewSkill(String name) {
+    public String addNewSkill(String name) throws Exception{
         List<Skill> skills = service.getAll();
         Skill skill = new Skill(null, name);
         if (skills.contains(skill)) {

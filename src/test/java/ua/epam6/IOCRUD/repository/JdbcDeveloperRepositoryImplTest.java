@@ -6,7 +6,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import testUtil.TestUtil;
+import ua.epam6.IOCRUD.testUtil.TestUtil;
 import ua.epam6.IOCRUD.mappers.JdbcDeveloperMapper;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.model.AccountStatus;
@@ -32,32 +32,31 @@ public class JdbcDeveloperRepositoryImplTest {
     private static final String PATH_TO_POPULATE_SCRIPT = "./src/test/resources/db/populateDB.sql";
     private static JdbcDeveloperRepositoryImpl testedRepo;
     private static Connection connection;
-    private String SELECT_QUERY_CREATE = "SELECT Max(d.Id), d.First_name, d.Last_name, s.Id, s.Name," +
-            " a.Id, a.Name, a.Status " +
-            "FROM ioapplication.Developers d " +
+    private String SELECT_QUERY_CREATE = "SELECT Max(d.id), d.first_name, d.last_name, s.id, s.name, a.id, a.name, a.status " +
+            "FROM developers d " +
             "LEFT JOIN (" +
-            "SELECT ds.Developer_Id, s.Id, s.Name " +
-            "FROM ioapplication.Developer_Skill ds " +
-            "INNER JOIN ioapplication.Skills s " +
-            "ON ds.Skill_Id = s.Id) s " +
-            "ON d.Id = s.Developer_Id " +
-            "LEFT JOIN ioapplication.Accounts a " +
-            "ON d.Account_Id = a.Id " +
-            "GROUP BY s.Id, d.Last_name, d.First_name, s.Name, a.Id, a.Name, a.Status;";
-    private String SELECT_QUERY = "SELECT d.Id, d.First_name, d.Last_name, s.Id, s.Name, a.Id, a.Name, a.Status " +
-            "FROM ioapplication.Developers d " +
+            "SELECT ds.developer_id, s.id, s.name " +
+            "FROM developer_skill ds " +
+            "INNER JOIN skills s " +
+            "ON ds.skill_id = s.id) s " +
+            "ON d.id = s.developer_id " +
+            "LEFT JOIN accounts a " +
+            "ON d.account_id = a.id " +
+            "GROUP BY s.id, d.last_name, d.first_name, s.name, a.id, a.name, a.status;";
+    private String SELECT_QUERY = "SELECT d.id, d.first_name, d.last_name, s.id, s.name, a.id, a.name, a.status " +
+            "FROM developers d " +
             "LEFT JOIN (" +
-            "SELECT ds.Developer_Id, s.Id, s.Name " +
-            "FROM ioapplication.Developer_Skill ds " +
-            "INNER JOIN ioapplication.Skills s " +
-            "ON ds.Skill_Id = s.Id) s " +
-            "ON d.Id = s.Developer_Id " +
-            "LEFT JOIN ioapplication.Accounts a " +
-            "ON d.Account_Id = a.Id " +
-            "WHERE d.Id = ?;";
-    private Developer createDeveloper = new Developer(4L, "Max", "Kowalski",
+            "SELECT ds.developer_id, s.id, s.name " +
+            "FROM developer_skill ds " +
+            "INNER JOIN skills s " +
+            "ON ds.skill_id = s.id) s " +
+            "ON d.id = s.developer_id " +
+            "LEFT JOIN accounts a " +
+            "ON d.account_id = a.id " +
+            "WHERE d.id = ?;";
+    private Developer createDeveloper = new Developer(5L, "Max", "Kowalski",
             Arrays.stream(new Skill[]{new Skill(2L, "C++")}).collect(Collectors.toSet()),
-            new Account(3L, "Geek", AccountStatus.BANNED));
+            new Account(3L, "John", AccountStatus.BANNED));
     private Developer getDeveloper = new Developer(2L, "William", "Shakespear",
             Arrays.stream(new Skill[]{new Skill(2L, "C++")}).collect(Collectors.toSet()),
             new Account(2L, "William", AccountStatus.DELETED));
@@ -153,15 +152,18 @@ public class JdbcDeveloperRepositoryImplTest {
     public void checkGetAll() {
         try {
             Collections.addAll(allDevelopers, new Developer(1L, "Joe", "Williams",
-                            Arrays.stream(new Skill[]{new Skill(1L, "Java")}).collect(Collectors.toSet()),
+                                    Arrays.stream(new Skill[]{new Skill(3L, "C#")}).collect(Collectors.toSet()),
                                     new Account(1L, "Joe", AccountStatus.ACTIVE)),
-                    new Developer(2L, "William", "Shakespear",
-                            Arrays.stream(new Skill[]{new Skill(1L, "Java"),
-                                    new Skill(3L, "C#")}).collect(Collectors.toSet()),
+                            new Developer(2L, "William", "Shakespear",
+                                    Arrays.stream(new Skill[]{new Skill(2L, "C++")}).collect(Collectors.toSet()),
                                     new Account(2L, "William", AccountStatus.DELETED)),
-                    new Developer(3L, "John", "Higgins",
-                            Arrays.stream(new Skill[]{new Skill(4L, "Python")}).collect(Collectors.toSet()),
-                                    new Account(3L, "John", AccountStatus.BANNED)));
+                            new Developer(3L, "John", "Higgins",
+                                    Arrays.stream(new Skill[]{new Skill(1L, "Java"),
+                                    new Skill(2L, "C++")}).collect(Collectors.toSet()),
+                                    new Account(3L, "John", AccountStatus.BANNED)),
+                            new Developer(4L, "James", "Holden",
+                                    Arrays.stream(new Skill[]{new Skill(4L, "Python")}).collect(Collectors.toSet()),
+                                    new Account(4L, "James", AccountStatus.ACTIVE)));
             assertEquals(allDevelopers, testedRepo.getAll());
             log.debug("Got all developers(TEST)");
         } catch (Exception e) {

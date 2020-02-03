@@ -1,13 +1,13 @@
 package ua.epam6.IOCRUD.repository.javaio;
 
+import ua.epam6.IOCRUD.repository.AccountRepository;
+import ua.epam6.IOCRUD.repository.DeveloperRepository;
+import ua.epam6.IOCRUD.repository.SkillRepository;
 import ua.epam6.IOCRUD.exceptions.FileProcessingException;
 import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.model.Developer;
 import ua.epam6.IOCRUD.model.Skill;
-import ua.epam6.IOCRUD.repository.AccountRepository;
-import ua.epam6.IOCRUD.repository.DeveloperRepository;
-import ua.epam6.IOCRUD.repository.SkillRepository;
 import ua.epam6.IOCRUD.utils.FileProcessor;
 
 import java.util.*;
@@ -23,7 +23,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         this.skillRepository = skillRepository;
     }
 
-    public Developer getById(Long id) {
+    public Developer getById(Long id) throws Exception {
         Developer developer = null;
         try {
             for (String line : fileProcessor.readFile()) {
@@ -37,7 +37,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         return developer;
     }
 
-    public Long getLastId() {
+    public Long getLastId() throws Exception {
         List<String> entities;
         try {
             entities = fileProcessor.readFile();
@@ -62,7 +62,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         return null;
     }
 
-    public List<Developer> getAll() {
+    public List<Developer> getAll() throws Exception {
         List<Developer> list = new ArrayList<>();
         try {
             for (String line : fileProcessor.readFile()) {
@@ -77,14 +77,14 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         return list;
     }
 
-    public Developer create(Developer developer) {
+    public Developer create(Developer developer) throws Exception {
         List<Developer> developers = getAll();
         developers.add(developer);
         serialize(developers);
         return developer;
     }
 
-    public void delete(Long ID) {
+    public void delete(Long ID) throws Exception {
         List<Developer> developers = getAll();
         Developer searchedDeveloper = developers.stream().filter(e -> e.getId().equals(ID)).findAny().get();
         if (developers.remove(searchedDeveloper)) {
@@ -92,7 +92,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         }
     }
 
-    public Developer update(Developer updatedDeveloper) throws NoSuchElementException {
+    public Developer update(Developer updatedDeveloper) throws Exception {
         List<Developer> developers = getAll();
         boolean updated = developers.removeIf(dev -> dev.getId().equals(updatedDeveloper.getId()));
         if (!updated) {
@@ -112,7 +112,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         }
     }
 
-    private Developer deserialize(String line) {
+    private Developer deserialize(String line) throws Exception {
         Long id = null;
         String firstName = null;
         String lastName = null;

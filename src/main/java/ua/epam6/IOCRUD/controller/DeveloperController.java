@@ -19,7 +19,7 @@ public class DeveloperController {
     private SkillService skillService = new SkillService();
     private DeveloperService developerService = new DeveloperService();
 
-    public String getAll() {
+    public String getAll() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (Developer developer : developerService.getAll()) {
@@ -29,7 +29,7 @@ public class DeveloperController {
         return stringBuilder.toString();
     }
 
-    public String getById(long id) {
+    public String getById(long id) throws Exception {
         Developer developer = developerService.getById(id);
         if (developer == null) {
             log.warn("Developer not found while getting by ID(MySQL): " + id);
@@ -40,7 +40,7 @@ public class DeveloperController {
         }
     }
 
-    public String addNewDeveloper(String firstName, String lastName, String accountData, Set<Long> skillsId) {
+    public String addNewDeveloper(String firstName, String lastName, String accountData, Set<Long> skillsId) throws Exception {
         Set<Skill> skills = new HashSet<>();
         for (Long skillId : skillsId) {
             Skill skill = skillService.getById(skillId);
@@ -60,7 +60,7 @@ public class DeveloperController {
         }
     }
 
-    public String setAccount(long devId, long accId) {
+    public String setAccount(long devId, long accId) throws Exception {
         Developer developer = developerService.getById(devId);
         Account account = accountService.getById(accId);
         if (developer == null || account == null) {
@@ -75,7 +75,7 @@ public class DeveloperController {
         }
     }
 
-    public String setSkills(long devId, List<Long> skillIds) {
+    public String setSkills(long devId, List<Long> skillIds) throws Exception {
         Developer developer = developerService.getById(devId);
         if (developer == null) {
             log.error("Error occurred while setting skills to developer");
@@ -94,7 +94,7 @@ public class DeveloperController {
         return "Operation completed successfully";
     }
 
-    public String getAllAccounts() {
+    public String getAllAccounts() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         List<Account> accounts = accountService.getAll();
         for (Account account : accounts) {
@@ -106,7 +106,7 @@ public class DeveloperController {
         return stringBuilder.toString();
     }
 
-    public String getAllSkills() {
+    public String getAllSkills() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         List<Skill> skills = skillService.getAll();
         for (Skill skill : skills) {

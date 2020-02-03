@@ -6,7 +6,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import testUtil.TestUtil;
+import ua.epam6.IOCRUD.testUtil.TestUtil;
+import ua.epam6.IOCRUD.exceptions.NoSuchEntryException;
+import ua.epam6.IOCRUD.exceptions.RepoStorageException;
 import ua.epam6.IOCRUD.mappers.JdbcAccountMapper;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.model.AccountStatus;
@@ -28,9 +30,9 @@ public class JdbcAccountRepositoryImplTest {
     private static final String PATH_TO_POPULATE_SCRIPT = "./src/test/resources/db/populateDB.sql";
     private static JdbcAccountRepositoryImpl testedRepo;
     private static Connection connection;
-    private String SELECT_QUERY_CREATE = "SELECT * FROM ioapplication.Accounts GROUP BY Id HAVING Max(Id);";
-    private String SELECT_QUERY = "SELECT * FROM ioapplication.Accounts WHERE Id = ?;";
-    private Account createAccount = new Account(4L, "Alexei", AccountStatus.ACTIVE);
+    private String SELECT_QUERY_CREATE = "SELECT * FROM accounts GROUP BY id HAVING Max(id);";
+    private String SELECT_QUERY = "SELECT * FROM accounts WHERE id = ?;";
+    private Account createAccount = new Account(5L, "Alexei", AccountStatus.ACTIVE);
     private Account getAccount = new Account(2L, "William", AccountStatus.DELETED);
     private Account updateAccount = new Account(1L, "Max", AccountStatus.BANNED);
     private List<Account> allAccounts = new ArrayList<>();
@@ -69,7 +71,7 @@ public class JdbcAccountRepositoryImplTest {
     }
 
     @Test
-    public void checkCreation() {
+    public void checkCreation() throws RepoStorageException  {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE)) {
             testedRepo.create(createAccount);
@@ -92,7 +94,7 @@ public class JdbcAccountRepositoryImplTest {
     }
 
     @Test
-    public void checkUpdate() {
+    public void checkUpdate() throws NoSuchEntryException  {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY,
                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             testedRepo.update(updateAccount);
@@ -123,7 +125,8 @@ public class JdbcAccountRepositoryImplTest {
         try {
             Collections.addAll(allAccounts, new Account(1L, "Joe", AccountStatus.ACTIVE),
                     new Account(2L, "William", AccountStatus.DELETED),
-                    new Account(3L, "John", AccountStatus.BANNED));
+                    new Account(3L, "John", AccountStatus.BANNED),
+                    new Account(4L, "James", AccountStatus.ACTIVE));
             assertEquals(allAccounts, testedRepo.getAll());
             log.debug("Got all accounts(TEST)");
         } catch (Exception e) {

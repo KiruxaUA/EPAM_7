@@ -18,7 +18,7 @@ class SkillView {
         this.inputReader = reader;
     }
 
-    boolean run() {
+    boolean run() throws Exception {
         while (true) {
             System.out.println(menu);
             int choice = inputReader.getIntInput();

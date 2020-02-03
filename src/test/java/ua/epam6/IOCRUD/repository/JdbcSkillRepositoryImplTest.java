@@ -6,7 +6,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import testUtil.TestUtil;
+import ua.epam6.IOCRUD.testUtil.TestUtil;
+import ua.epam6.IOCRUD.exceptions.NoSuchEntryException;
+import ua.epam6.IOCRUD.exceptions.RepoStorageException;
 import ua.epam6.IOCRUD.mappers.JdbcSkillMapper;
 import ua.epam6.IOCRUD.model.Skill;
 import ua.epam6.IOCRUD.repository.jdbc.JdbcSkillRepositoryImpl;
@@ -27,8 +29,8 @@ public class JdbcSkillRepositoryImplTest {
     private static final String PATH_TO_POPULATE_SCRIPT = "./src/test/resources/db/populateDB.sql";
     private static JdbcSkillRepositoryImpl testedRepo;
     private static Connection connection;
-    private String SELECT_QUERY_CREATE = "SELECT * FROM ioapplication.Skills GROUP BY Id HAVING Max(Id);";
-    private String SELECT_QUERY = "SELECT * FROM ioapplication.Skills WHERE Id = ?;";
+    private String SELECT_QUERY_CREATE = "SELECT * FROM skills GROUP BY id HAVING Max(id);";
+    private String SELECT_QUERY = "SELECT * FROM skills WHERE id = ?;";
     private Skill createSkill = new Skill(5L, "OCaml");
     private Skill getSkill = new Skill(2L, "C++");
     private Skill updateSkill = new Skill(1L, "Kotlin");
@@ -91,9 +93,9 @@ public class JdbcSkillRepositoryImplTest {
     }
 
     @Test
-    public void checkUpdating() {
+    public void checkUpdating() throws NoSuchEntryException {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY,
-                    ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+                    ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             testedRepo.update(updateSkill);
             statement.setLong(1, 1);
             ResultSet resultSet = statement.executeQuery();
@@ -105,9 +107,9 @@ public class JdbcSkillRepositoryImplTest {
     }
 
     @Test
-    public void checkDelete() {
+    public void checkDelete() throws RepoStorageException, NoSuchEntryException {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY,
-                    ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+                    ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             testedRepo.delete(4L);
             statement.setLong(1, 4);
             assertFalse(statement.executeQuery().next());

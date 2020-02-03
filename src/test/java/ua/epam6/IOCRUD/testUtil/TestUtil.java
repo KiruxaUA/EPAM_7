@@ -1,4 +1,4 @@
-package testUtil;
+package ua.epam6.IOCRUD.testUtil;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -9,9 +9,7 @@ public class TestUtil {
     private static final String workMode;
     private static final String testMode = "# JDBC\n" +
             "jdbc.driver = org.h2.Driver\n" +
-            "jdbc.url = jdbc:h2:~/test\n" +
-            "jdbc.user = sa\n" +
-            "jdbc.password = ";
+            "jdbc.url = jdbc:h2:mem:ioapplication";
     static {
         StringBuilder stringBuilder = new StringBuilder();
         try (FileReader fr = new FileReader(PATH_TO_PROPERTIES)){

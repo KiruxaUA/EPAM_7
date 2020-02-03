@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import ua.epam6.IOCRUD.model.Skill;
 import ua.epam6.IOCRUD.service.SkillService;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +49,7 @@ public class SkillServlet extends HttpServlet {
         log.debug("Request create (POST)");
         try {
             skillService.create(gson.fromJson(request.getReader(), Skill.class));
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Error in creation request (POST)");
             e.printStackTrace();
         }

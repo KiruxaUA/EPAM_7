@@ -1,10 +1,10 @@
 package ua.epam6.IOCRUD.repository.jdbc;
 
 import org.apache.log4j.Logger;
+import ua.epam6.IOCRUD.repository.DeveloperRepository;
 import ua.epam6.IOCRUD.mappers.JdbcDeveloperMapper;
 import ua.epam6.IOCRUD.model.Developer;
 import ua.epam6.IOCRUD.model.Skill;
-import ua.epam6.IOCRUD.repository.DeveloperRepository;
 import ua.epam6.IOCRUD.utils.JDBCConnectionPool;
 
 import java.sql.*;
@@ -13,21 +13,21 @@ import java.util.List;
 
 public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     private static final Logger log = Logger.getLogger(JdbcDeveloperRepositoryImpl.class);
-    private final String INSERT_QUERY = "INSERT INTO 1?(2?) values (3?);";
-    private final String SELECT_QUERY_SIMPLE = "select 1? from 2?;";
-    private final String SELECT_QUERY_COMPLEX = "select d.id, d.first_name, d.last_name, s.id, s.name, a.id, a.name, a.status " +
-            "from developers d " +
-            "left join (" +
-            "select ds.developer_id, s.id, s.name " +
-            "from developer_skill ds " +
-            "inner join skills s " +
-            "on ds.skill_id = s.id) s " +
-            "on d.id = s.developer_id " +
-            "left join accounts a " +
-            "on d.account_id = a.id " +
+    private final String INSERT_QUERY = "INSERT INTO 1?(2?) VALUES (3?);";
+    private final String SELECT_QUERY_SIMPLE = "SELECT 1? FROM 2?;";
+    private final String SELECT_QUERY_COMPLEX = "SELECT d.id, d.first_name, d.last_name, s.id, s.name, a.id, a.name, a.status " +
+            "FROM developers d " +
+            "LEFT JOIN (" +
+            "SELECT ds.developer_id, s.id, s.name " +
+            "FROM developer_skill ds " +
+            "INNER JOIN skills s " +
+            "ON ds.skill_id = s.id) s " +
+            "ON d.id = s.developer_id " +
+            "LEFT JOIN accounts a " +
+            "ON d.account_id = a.id " +
             "1?;";
-    private final String UPDATE_QUERY = "update 1? set 2? where 3?;";
-    private final String DELETE_QUERY = "delete from 1? where 2?;";
+    private final String UPDATE_QUERY = "UPDATE 1? SET 2? WHERE 3?;";
+    private final String DELETE_QUERY = "DELETE FROM 1? WHERE 2?;";
 
     private Connection connection;
 
@@ -35,7 +35,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
         try {
             connection = JDBCConnectionPool.getConnection();
         } catch (SQLException e) {
-            log.error("Cannot connect to MySQL", e);
+            log.error("Cannot connect to database", e);
         }
     }
 
@@ -44,30 +44,30 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                         ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
-            statement.execute(INSERT_QUERY.replace("1?", "Developers")
-                    .replace("2?", "First_name, Last_name, Account_id")
+            statement.execute(INSERT_QUERY.replace("1?", "developers")
+                    .replace("2?", "first_name, last_name, account_id")
                     .replace("3?", "'" + developerModel.getFirstName() + "', '" +
                             developerModel.getLastName() + "', '" + developerModel.getAccount().getId() + "'"));
-            ResultSet resultSet = statement.executeQuery(SELECT_QUERY_SIMPLE.replace("1?", "Max(Id)")
-                    .replace("2?", "Developers"));
+            ResultSet resultSet = statement.executeQuery(SELECT_QUERY_SIMPLE.replace("1?", "Max(id)")
+                    .replace("2?", "developers"));
             resultSet.first();
             long developerId = resultSet.getLong(1);
             for (Skill skill : developerModel.getSkills()) {
-                statement.addBatch(INSERT_QUERY.replace("1?", "Developer_skill")
-                        .replace("2?", "Developer_id, Skill_id")
+                statement.addBatch(INSERT_QUERY.replace("1?", "developer_skill")
+                        .replace("2?", "developer_id, skill_id")
                         .replace("3?", "'" + developerId + "', '" + skill.getId() + "'"));
             }
             statement.executeBatch();
             connection.commit();
             connection.setAutoCommit(true);
-            log.debug("Created entry(MySQL): " + developerModel);
+            log.debug("Created entry(Database): " + developerModel);
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-            log.error("Wrong SQL query to MySQL in creation", e);
+            log.error("Wrong SQL query to database in creation", e);
         }
         return developerModel;
     }
@@ -82,15 +82,15 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
             connection.commit();
             connection.setAutoCommit(true);
             Developer developer = new JdbcDeveloperMapper().map(resultSet, ID);
-            log.debug("Read entry(MySQL) with ID: "+ ID);
+            log.debug("Read entry(H2) with ID: "+ ID);
             return developer;
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                log.error("Rollback denied(MySQL)");
+                log.error("Rollback denied(H2)");
             }
-            log.error("Wrong SQL query to MySQL in reading", e);
+            log.error("Wrong SQL query to H2 in reading", e);
         }
         return null;
     }
@@ -108,7 +108,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
                 try {
                     connection.rollback();
                 } catch (SQLException e) {
-                    log.error("Rollback denied(MySQL)");
+                    log.error("Rollback denied(H2)");
                 }
                 log.warn("No such entry: " + updatedModel);
             }
@@ -122,14 +122,14 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
             statement.executeBatch();
             connection.commit();
             connection.setAutoCommit(true);
-            log.debug("Updated entry(MySQL): " + updatedModel);
+            log.debug("Updated entry(H2): " + updatedModel);
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                log.error("Rollback denied(MySQL)");
+                log.error("Rollback denied(H2)");
             }
-            log.error("Wrong SQL query to DB in updating", e);
+            log.error("Wrong SQL query to H2 in updating", e);
         }
         return updatedModel;
     }
@@ -146,20 +146,20 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
                 try {
                     connection.rollback();
                 } catch (SQLException ex) {
-                    log.error("Rollback denied(MySQL)");
+                    log.error("Rollback denied(H2)");
                 }
                 log.warn("No such entry with ID: " + deletedEntry);
             }
             connection.commit();
             connection.setAutoCommit(true);
-            log.debug("Delete entry(MySQL) with ID: " + deletedEntry);
+            log.debug("Delete entry(H2) with ID: " + deletedEntry);
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                log.error("Rollback denied(MySQL)");
+                log.error("Rollback denied(H2)");
             }
-            log.error("Wrong SQL query to MySQL in deleting", e);
+            log.error("Wrong SQL query to H2 in deleting", e);
         }
     }
 
@@ -173,14 +173,14 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
             JdbcDeveloperMapper mapper = new JdbcDeveloperMapper();
             long index = -1;
             while (resultSet.next()){
-                if(index!=resultSet.getLong(1)){
+                if(index != resultSet.getLong(1)) {
                     index = resultSet.getLong(1);
                     developers.add(mapper.map(resultSet, index));
                 }
             }
             connection.commit();
             connection.setAutoCommit(true);
-            log.debug("Read all entries(MySQL)");
+            log.debug("Read all entries(Database)");
             return developers;
         } catch (SQLException e) {
             log.error("Error in selecting records in SQL query");

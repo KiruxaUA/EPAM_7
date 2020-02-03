@@ -1,9 +1,9 @@
 package ua.epam6.IOCRUD.repository.javaio;
 
+import ua.epam6.IOCRUD.repository.AccountRepository;
 import ua.epam6.IOCRUD.exceptions.*;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.model.AccountStatus;
-import ua.epam6.IOCRUD.repository.AccountRepository;
 import ua.epam6.IOCRUD.utils.FileProcessor;
 
 import java.util.ArrayList;

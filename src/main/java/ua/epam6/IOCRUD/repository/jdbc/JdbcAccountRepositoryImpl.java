@@ -1,9 +1,11 @@
 package ua.epam6.IOCRUD.repository.jdbc;
 
 import org.apache.log4j.Logger;
+import ua.epam6.IOCRUD.repository.AccountRepository;
+import ua.epam6.IOCRUD.exceptions.NoSuchEntryException;
+import ua.epam6.IOCRUD.exceptions.RepoStorageException;
 import ua.epam6.IOCRUD.mappers.JdbcAccountMapper;
 import ua.epam6.IOCRUD.model.Account;
-import ua.epam6.IOCRUD.repository.AccountRepository;
 import ua.epam6.IOCRUD.utils.JDBCConnectionPool;
 
 import java.sql.*;
@@ -23,56 +25,53 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         try {
             connection = JDBCConnectionPool.getConnection();
         } catch (SQLException e) {
-            log.error("Cannot connect to MySQL", e);
+            log.error("Cannot connect to database", e);
         }
     }
 
     @Override
-    public Account create(Account accountModel) {
-        try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)){
+    public Account create(Account accountModel) throws RepoStorageException {
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             statement.setString(1, accountModel.getName());
             statement.setString(2, accountModel.getAccountStatus().toString());
             statement.execute();
-            log.debug("Created entry(MySQL): " + accountModel);
+            log.debug("Created entry(Database): " + accountModel);
             return accountModel;
         } catch (SQLException e) {
-            log.error("Wrong SQL query to MySQL in creation", e);
-            System.out.println("Wrong SQL query to MySQL in creation");
+            log.error("Wrong SQL query to database in creation", e);
+            throw new RepoStorageException("Wrong SQL query to database in creation");
         }
-        return null;
     }
 
     @Override
-    public Account getById(Long ID) {
-        try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY)) {
+    public Account getById(Long ID) throws RepoStorageException {
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setLong(1, ID);
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.absolute(2)) {
-                log.warn("Reading from MySQL is failed");
-                System.out.println("Reading from MySQL is failed");
+                log.warn("Reading from database is failed");
             }
             resultSet.first();
             Account account = new JdbcAccountMapper().map(resultSet, ID);
-            log.debug("Read entry(MySQL) with ID: "+ ID);
+            log.debug("Read entry(Database) with ID: "+ ID);
             return account;
         } catch (SQLException e) {
-            log.error("Wrong SQL query to DB in reading", e);
-            System.out.println("Wrong SQL query to DB in reading");
+            log.error("Wrong SQL query to database in reading", e);
+            throw new RepoStorageException("Wrong SQL query to database in reading");
         }
-        return null;
     }
 
     @Override
-    public Account update(Account updatedModel) {
-        try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
+    public Account update(Account updatedModel) throws NoSuchEntryException {
+        try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setString(1, updatedModel.getName());
             statement.setString(2, updatedModel.getAccountStatus().toString());
             statement.setLong(3, updatedModel.getId());
             if(statement.executeUpdate() < 1) {
                 log.warn("No such entry: " + updatedModel);
-                updatedModel = null;
+                throw new NoSuchEntryException("Entry is not found");
             }
-            log.debug("Updated entry(MySQL): " + updatedModel);
+            log.debug("Updated entry(Database): " + updatedModel);
         }
         catch (SQLException e) {
             log.error("Error in updating record in SQL query");
@@ -82,7 +81,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
 
     @Override
     public void delete(Long deleteEntry) {
-        try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
+        try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setLong(1, deleteEntry);
             if (statement.executeUpdate() < 1) {
                 log.warn("No such entry with ID: " + deleteEntry);
@@ -96,18 +95,18 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
 
     @Override
     public List<Account> getAll() {
-        try (PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY)) {
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             ResultSet resultSet = statement.executeQuery();
             ArrayList<Account> accounts = new ArrayList<>();
             JdbcAccountMapper mapper = new JdbcAccountMapper();
             while (resultSet.next()) {
                 accounts.add(mapper.map(resultSet, resultSet.getLong(1)));
             }
-            log.debug("Read all entries(MySQL)");
+            log.debug("Read all entries(Database)");
             return accounts;
         }
         catch (SQLException e) {
-            log.error("Error in selecting records in SQL query");
+            log.error("Error in selecting records in database query");
         }
         return null;
     }

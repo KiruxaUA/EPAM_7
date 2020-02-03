@@ -1,6 +1,6 @@
 package ua.epam6.IOCRUD.utils;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;
 
 import java.io.FileReader;

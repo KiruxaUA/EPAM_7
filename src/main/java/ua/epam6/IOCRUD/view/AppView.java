@@ -13,7 +13,7 @@ public class AppView {
     private String messageChoice = "Choose an option of menu: ";
     private String messageError = "Error occurred while processing option input! Try to fit the rules.";
 
-    public void viewApp() {
+    public void viewApp() throws Exception {
         do {
             System.out.println("1.Developers\n2.Skills\n3.Accounts\n4.Exit");
             switch(validateInput(pattern, messageChoice, messageError)) {

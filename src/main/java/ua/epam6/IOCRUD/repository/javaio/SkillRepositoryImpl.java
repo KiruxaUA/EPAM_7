@@ -1,9 +1,9 @@
 package ua.epam6.IOCRUD.repository.javaio;
 
+import ua.epam6.IOCRUD.repository.SkillRepository;
 import ua.epam6.IOCRUD.exceptions.FileProcessingException;
 import ua.epam6.IOCRUD.exceptions.NoSuchElementException;
 import ua.epam6.IOCRUD.model.Skill;
-import ua.epam6.IOCRUD.repository.SkillRepository;
 import ua.epam6.IOCRUD.utils.FileProcessor;
 
 import java.util.ArrayList;

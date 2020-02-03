@@ -34,7 +34,6 @@ public class WebApplication {
         resources.addPreResources(new DirResourceSet(resources, "/WEB-INF/classes",
                 additionWebInfClasses.getAbsolutePath(), "/"));
         ctx.setResources(resources);
-
         tomcat.start();
         tomcat.getServer().await();
     }

@@ -1,17 +1,21 @@
-INSERT INTO Skills (Name) VALUES ('Java');
-INSERT INTO Skills (Name) VALUES ('C++');
-INSERT INTO Skills (Name) VALUES ('C#');
-INSERT INTO Skills (Name) VALUES ('Python');
+SET SCHEMA PUBLIC;
+INSERT INTO skills (name) VALUES ('Java');
+INSERT INTO skills (name) VALUES ('C++');
+INSERT INTO skills (name) VALUES ('C#');
+INSERT INTO skills (name) VALUES ('Python');
 
-INSERT INTO Accounts (Name, Status) VALUES ('Joe', 'ACTIVE');
-INSERT INTO Accounts (Name, Status) VALUES ('William', 'DELETED');
-INSERT INTO Accounts (Name, Status) VALUES ('John', 'BANNED');
+INSERT INTO accounts (name, status) VALUES ('Joe', 'ACTIVE');
+INSERT INTO accounts (name, status) VALUES ('William', 'DELETED');
+INSERT INTO accounts (name, status) VALUES ('John', 'BANNED');
+INSERT INTO accounts (name, status) VALUES ('James', 'ACTIVE');
 
-INSERT INTO Developers (First_Name, Last_Name, Account_Id) VALUES ('Joe', 'Williams', '1');
-INSERT INTO Developers (First_Name, Last_Name, Account_Id) VALUES ('William', 'Shakespear', '2');
-INSERT INTO Developers (First_Name, Last_Name, Account_Id) VALUES ('John', 'Higgins', '3');
+INSERT INTO developers (first_name, last_name, account_id) VALUES ('Joe', 'Williams', '1');
+INSERT INTO developers (first_name, last_name, account_id) VALUES ('William', 'Shakespear', '2');
+INSERT INTO developers (first_name, last_name, account_id) VALUES ('John', 'Higgins', '3');
+INSERT INTO developers (first_name, last_name, account_id) VALUES ('James', 'Holden', '4');
 
-INSERT INTO Developer_skill (Developer_Id, Skill_Id) VALUES ('1', '2');
-INSERT INTO Developer_skill (Developer_Id, Skill_Id) VALUES ('2', '1');
-INSERT INTO Developer_skill (Developer_Id, Skill_Id) VALUES ('2', '3');
-INSERT INTO Developer_skill (Developer_Id, Skill_Id) VALUES ('3', '4');
+INSERT INTO developer_skill (developer_id, skill_id) VALUES ('1', '3');
+INSERT INTO developer_skill (developer_id, skill_id) VALUES ('2', '2');
+INSERT INTO developer_skill (developer_id, skill_id) VALUES ('3', '1');
+INSERT INTO developer_skill (developer_id, skill_id) VALUES ('3', '2');
+INSERT INTO developer_skill (developer_ID, skill_id) VALUES ('4', '4');

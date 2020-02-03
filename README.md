@@ -13,8 +13,8 @@
 ### Storage (MySQL)
   - accounts (Id, Name, Status)
   - skills (Id, Name)
-  - developers (Id, FirstName, LastName, AccountId)
-  - developerskill (Id, DeveloperId, SkillId)
+  - developers (Id, First_Name, Last_Name, Account_Id)
+  - developer_skill (Id, Developer_Id, Skill_Id)
 
 ### Available actions
   - Create

@@ -1,5 +1,7 @@
 # CRUD Application
 
+[![Build Status](https://api.travis-ci.com/KiruxaUA/EPAM_7.svg?branch=master)](https://travis-ci.com/KiruxaUA/EPAM_7)
+
 ### Entities
   - Developer
   - Skill

@@ -65,7 +65,7 @@ public class WebApplication {
 
         WebResourceSet resourceSet;
         if (additionWebInfClassesFolder.exists()) {
-            resourceSet = new DirResourceSet(resources, "/WEB-INF/classes", additionWebInfClassesFolder.getAbsolutePath(), "/");
+            resourceSet = new DirResourceSet(resources, "/src/main/webapp/WEB-INF/classes", additionWebInfClassesFolder.getAbsolutePath(), "/");
             System.out.println("loading WEB-INF resources from as '" + additionWebInfClassesFolder.getAbsolutePath() + "'");
         } else {
             resourceSet = new EmptyResourceSet(resources);

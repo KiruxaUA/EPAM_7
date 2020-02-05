@@ -1,3 +1,4 @@
+USE scjb6rzjixjf7taw;
 DROP TABLE IF EXISTS developer_skill;
 DROP TABLE IF EXISTS developers;
 DROP TABLE IF EXISTS skills;
@@ -20,12 +21,15 @@ CREATE TABLE IF NOT EXISTS developers (
     last_name Varchar(255),
     account_id INT,
     FOREIGN KEY (account_id) REFERENCES accounts(id)
+    ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS developer_skill(
+CREATE TABLE IF NOT EXISTS developer_skill (
     developer_id INT NOT NULL,
     skill_id INT NOT NULL,
     UNIQUE (developer_id, skill_id),
-    FOREIGN KEY (developer_id) REFERENCES developers(id),
+    FOREIGN KEY (developer_id) REFERENCES developers(id)
+    ON DELETE CASCADE,
     FOREIGN KEY (skill_id) REFERENCES skills(id)
+    ON DELETE CASCADE
 );

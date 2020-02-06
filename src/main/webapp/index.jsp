@@ -59,9 +59,9 @@
 </h2>
 <ul>
     <li><fmt:message key="layers.model" /></li>
-    <li><fmt:message key="layers.view" /></li>
+    <li><fmt:message key="layers.rest" /></li>
     <li><fmt:message key="layers.service" /></li>
-    <li><fmt:message key="layers.controller" /></li>
+    <li><fmt:message key="layers.repository" /></li>
 </ul>
 <h2>
     <fmt:message key="interfaces" />
@@ -77,18 +77,9 @@
     <fmt:message key="implementations" />
 </h2>
 <ul>
-    <li><fmt:message key="implementations.javaiodeveloperrepositoryimpl" /></li>
-    <li><fmt:message key="implementations.javaioskillrepositoryimpl" /></li>
-    <li><fmt:message key="implementations.javaioaccountrepositoryimpl" /></li>
     <li><fmt:message key="implementations.javajdbcaccountrepositoryimpl" /></li>
     <li><fmt:message key="implementations.javajdbcdeveloperrepositoryimpl" /></li>
     <li><fmt:message key="implementations.javajdbcskillrepositoryimpl" /></li>
-</ul>
-<h2>
-    <fmt:message key="requirements" />
-</h2>
-<ul>
-    <li><fmt:message key="requirements.javaversion" /></li>
 </ul>
 <table style="border-spacing: 50px; width: 100%">
     <tr>

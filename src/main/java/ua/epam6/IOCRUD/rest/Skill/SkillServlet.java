@@ -2,6 +2,7 @@ package ua.epam6.IOCRUD.rest.Skill;
 
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
+import ua.epam6.IOCRUD.exceptions.RepoStorageException;
 import ua.epam6.IOCRUD.model.Skill;
 import ua.epam6.IOCRUD.service.SkillService;
 
@@ -17,12 +18,17 @@ import java.io.PrintWriter;
 public class SkillServlet extends HttpServlet {
 
     private static final Logger log = Logger.getLogger(SkillServlet.class);
-    private Gson gson;
+    private Gson gson = new Gson();
     private SkillService skillService;
 
-    public SkillServlet() {
-        gson = new Gson();
-        skillService = new SkillService();
+    @Override
+    public void init() {
+        try {
+            skillService = new SkillService();
+        } catch (Exception e) {
+            log.error("Some problem", e);
+            e.printStackTrace();
+        }
     }
 
     @Override

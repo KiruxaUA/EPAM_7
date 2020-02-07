@@ -1,9 +1,9 @@
-package ua.epam6.IOCRUD.rest.Developer;
+package ua.epam6.IOCRUD.rest;
 
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
-import ua.epam6.IOCRUD.model.Developer;
-import ua.epam6.IOCRUD.service.DeveloperService;
+import ua.epam6.IOCRUD.model.Account;
+import ua.epam6.IOCRUD.service.AccountService;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,15 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "DeveloperServlet", urlPatterns = "/api/v1/developers")
-public class DeveloperServlet extends HttpServlet {
+@WebServlet(name = "AccountServlet", urlPatterns = "/api/v1/accounts")
+public class AccountServlet extends HttpServlet {
 
-    private static final Logger log = Logger.getLogger(DeveloperServlet.class);
-    private DeveloperService developerService;
+    private final static Logger log = Logger.getLogger(AccountServlet.class);
     private Gson gson;
+    private AccountService accountService;
 
-    public DeveloperServlet() {
-        developerService = new DeveloperService();
+    @Override
+    public void init() {
+        accountService = new AccountService();
         gson = new Gson();
     }
 
@@ -42,14 +43,14 @@ public class DeveloperServlet extends HttpServlet {
                     break;
                 default:
                     log.warn("Invalid parameter type given by POST request");
-                    response.sendError(400, "invalid parameter type");
+                    response.sendError(400, "Invalid parameter type");
             }
         }
         log.debug("Request create (POST)");
         try {
-            developerService.create(gson.fromJson(request.getReader(), Developer.class));
+            accountService.create(gson.fromJson(request.getReader(), Account.class));
         } catch (Exception e) {
-            log.error("Error in creation request (POST)", e);
+            log.error("Error in creation request (POST)");
             e.printStackTrace();
         }
     }
@@ -62,11 +63,11 @@ public class DeveloperServlet extends HttpServlet {
         try {
             if(request.getParameter("id") == null || !request.getParameter("id").matches("\\d+")) {
                 log.debug("Request to get all");
-                writer.println(developerService.getAll());
+                writer.println(accountService.getAll());
                 log.debug("Sent JSON response");
             } else {
                 log.debug("Request to get by ID");
-                writer.println(gson.toJson(developerService.getById(Long.parseLong(request.getParameter("id")))));
+                writer.println(gson.toJson(accountService.getById(Long.parseLong(request.getParameter("id")))));
                 log.debug("Sent JSON response");
             }
         } catch (Exception e) {
@@ -79,7 +80,7 @@ public class DeveloperServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) {
         log.debug("Request to update (PUT)");
         try {
-            developerService.update(gson.fromJson(request.getReader(), Developer.class));
+            accountService.update(gson.fromJson(request.getReader(), Account.class));
         } catch (Exception e) {
             log.error("Error in updating entry", e);
             e.printStackTrace();
@@ -94,7 +95,7 @@ public class DeveloperServlet extends HttpServlet {
                 log.warn("Invalid id parameter given by DELETE request");
                 response.sendError(400, "Invalid parameter ID");
             } else {
-                developerService.delete(Long.parseLong(request.getParameter("id")));
+                accountService.delete(Long.parseLong(request.getParameter("id")));
             }
         } catch (Exception e) {
             log.error("Error in deleting entry", e);

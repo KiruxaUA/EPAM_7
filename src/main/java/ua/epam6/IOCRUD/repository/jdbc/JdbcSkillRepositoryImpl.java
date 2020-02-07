@@ -25,7 +25,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
         try {
             connection = JDBCConnectionPool.getConnection();
         } catch (SQLException e) {
-            log.error("Cannot connect to H2", e);
+            log.error("Cannot connect to database", e);
         }
     }
 
@@ -34,7 +34,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
         try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)) {
             statement.setString(1, model.getName());
             statement.execute();
-            log.debug("Created entry(H2): " + model);
+            log.debug("Created entry(Database): " + model);
         }
         catch (SQLException e) {
             log.error("Error in creation of SQL query");
@@ -50,7 +50,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
             statement.setLong(1, Id);
             ResultSet resultSet = statement.executeQuery();
             Skill skill = new JdbcSkillMapper().map(resultSet, Id);
-            log.debug("Read entry(H2) with ID: " + Id);
+            log.debug("Read entry(Database) with ID: " + Id);
             return skill;
         }
         catch (SQLException e) {
@@ -102,7 +102,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
             while (resultSet.next()) {
                 skills.add(mapper.map(resultSet, resultSet.getLong(1)));
             }
-            log.debug("Read all entries(H2)");
+            log.debug("Read all entries(Database)");
             return skills;
         }
         catch (SQLException e) {

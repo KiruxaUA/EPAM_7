@@ -82,13 +82,13 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
             connection.commit();
             connection.setAutoCommit(true);
             Developer developer = new JdbcDeveloperMapper().map(resultSet, ID);
-            log.debug("Read entry(H2) with ID: "+ ID);
+            log.debug("Read entry(Database) with ID: "+ ID);
             return developer;
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                log.error("Rollback denied(H2)");
+                log.error("Rollback denied(Database)");
             }
             log.error("Wrong SQL query to H2 in reading", e);
         }
@@ -108,7 +108,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
                 try {
                     connection.rollback();
                 } catch (SQLException e) {
-                    log.error("Rollback denied(H2)");
+                    log.error("Rollback denied(Database)");
                 }
                 log.warn("No such entry: " + updatedModel);
             }
@@ -122,14 +122,14 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
             statement.executeBatch();
             connection.commit();
             connection.setAutoCommit(true);
-            log.debug("Updated entry(H2): " + updatedModel);
+            log.debug("Updated entry(Database): " + updatedModel);
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                log.error("Rollback denied(H2)");
+                log.error("Rollback denied(Database)");
             }
-            log.error("Wrong SQL query to H2 in updating", e);
+            log.error("Wrong SQL query to database in updating", e);
         }
         return updatedModel;
     }
@@ -146,20 +146,20 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
                 try {
                     connection.rollback();
                 } catch (SQLException ex) {
-                    log.error("Rollback denied(H2)");
+                    log.error("Rollback denied(Database)");
                 }
                 log.warn("No such entry with ID: " + deletedEntry);
             }
             connection.commit();
             connection.setAutoCommit(true);
-            log.debug("Delete entry(H2) with ID: " + deletedEntry);
+            log.debug("Delete entry(Database) with ID: " + deletedEntry);
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                log.error("Rollback denied(H2)");
+                log.error("Rollback denied(Database)");
             }
-            log.error("Wrong SQL query to H2 in deleting", e);
+            log.error("Wrong SQL query to database in deleting", e);
         }
     }
 

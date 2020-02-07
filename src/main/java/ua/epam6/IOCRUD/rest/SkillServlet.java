@@ -1,9 +1,9 @@
-package ua.epam6.IOCRUD.rest.Account;
+package ua.epam6.IOCRUD.rest;
 
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
-import ua.epam6.IOCRUD.model.Account;
-import ua.epam6.IOCRUD.service.AccountService;
+import ua.epam6.IOCRUD.model.Skill;
+import ua.epam6.IOCRUD.service.SkillService;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,17 +12,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "AccountServlet", urlPatterns = "/api/v1/accounts")
-public class AccountServlet extends HttpServlet {
+@WebServlet(name = "SkillServlet", urlPatterns = "/api/v1/skills")
+public class SkillServlet extends HttpServlet {
 
-    private final static Logger log = Logger.getLogger(AccountServlet.class);
-    private Gson gson;
-    private AccountService accountService;
+    private static final Logger log = Logger.getLogger(SkillServlet.class);
+    private Gson gson = new Gson();
+    private SkillService skillService;
 
     @Override
     public void init() {
-        accountService = new AccountService();
-        gson = new Gson();
+        try {
+            skillService = new SkillService();
+        } catch (Exception e) {
+            log.error("Some problem", e);
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -48,7 +52,7 @@ public class AccountServlet extends HttpServlet {
         }
         log.debug("Request create (POST)");
         try {
-            accountService.create(gson.fromJson(request.getReader(), Account.class));
+            skillService.create(gson.fromJson(request.getReader(), Skill.class));
         } catch (Exception e) {
             log.error("Error in creation request (POST)");
             e.printStackTrace();
@@ -63,11 +67,11 @@ public class AccountServlet extends HttpServlet {
         try {
             if(request.getParameter("id") == null || !request.getParameter("id").matches("\\d+")) {
                 log.debug("Request to get all");
-                writer.println(accountService.getAll());
+                writer.println(gson.toJson(skillService.getAll()));
                 log.debug("Sent JSON response");
             } else {
                 log.debug("Request to get by ID");
-                writer.println(gson.toJson(accountService.getById(Long.parseLong(request.getParameter("id")))));
+                writer.println(gson.toJson(skillService.getById(Long.parseLong(request.getParameter("id")))));
                 log.debug("Sent JSON response");
             }
         } catch (Exception e) {
@@ -80,8 +84,9 @@ public class AccountServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) {
         log.debug("Request to update (PUT)");
         try {
-            accountService.update(gson.fromJson(request.getReader(), Account.class));
-        } catch (Exception e) {
+            skillService.update(gson.fromJson(request.getReader(), Skill.class));
+        }
+        catch (Exception e) {
             log.error("Error in updating entry", e);
             e.printStackTrace();
         }
@@ -95,10 +100,10 @@ public class AccountServlet extends HttpServlet {
                 log.warn("Invalid id parameter given by DELETE request");
                 response.sendError(400, "Invalid parameter ID");
             } else {
-                accountService.delete(Long.parseLong(request.getParameter("id")));
+                skillService.delete(Long.parseLong(request.getParameter("id")));
             }
         } catch (Exception e) {
-            log.error("Error in deleting entry", e);
+            log.error("Error in deleting entry");
             e.printStackTrace();
         }
     }

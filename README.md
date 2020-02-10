@@ -60,4 +60,4 @@ which has been built with Swagger UI.
 To start up application you should compile code (version of Java is 8) and start this with 
 entry point in WebApplication class. Then the tomcat server will start locally.
 
-This api is deployed to heroku cloud service. Link to project: https://https://rest-crud-application.herokuapp.com/
+This api is deployed to heroku cloud service. Link to project: https://rest-crud-application.herokuapp.com/

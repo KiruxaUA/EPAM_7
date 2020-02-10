@@ -13,12 +13,12 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class WebApplication {
+public class Main {
 
     private static File getRootFolder() {
         try {
             File root;
-            String runningJarPath = WebApplication.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath().replaceAll("\\\\", "/");
+            String runningJarPath = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath().replaceAll("\\\\", "/");
             int lastIndexOf = runningJarPath.lastIndexOf("/target/");
             if (lastIndexOf < 0) {
                 root = new File("");
@@ -54,7 +54,7 @@ public class WebApplication {
         }
         StandardContext ctx = (StandardContext) tomcat.addWebapp("", webContentFolder.getAbsolutePath());
         //Set execution independent of current thread context classloader (compatibility with exec:java mojo)
-        ctx.setParentClassLoader(WebApplication.class.getClassLoader());
+        ctx.setParentClassLoader(Main.class.getClassLoader());
 
         System.out.println("configuring app with basedir: " + webContentFolder.getAbsolutePath());
 

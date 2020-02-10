@@ -276,7 +276,7 @@
                     <assembleDirectory>target</assembleDirectory>
                     <programs>
                         <program>
-                            <mainClass>ua.epam6.IOCRUD.WebApplication</mainClass>
+                            <mainClass>ua.epam6.IOCRUD.Main</mainClass>
                             <id>webapp</id>
                         </program>
                     </programs>

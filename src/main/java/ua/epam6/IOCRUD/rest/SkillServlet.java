@@ -63,6 +63,7 @@ public class SkillServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.debug("Request to read (GET)");
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         PrintWriter writer = response.getWriter();
         try {
             if(request.getParameter("id") == null || !request.getParameter("id").matches("\\d+")) {

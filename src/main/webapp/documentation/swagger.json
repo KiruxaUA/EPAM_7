@@ -10,7 +10,7 @@
     }
   },
   "host": "rest-crud-application.herokuapp.com",
-  "basePath": "/",
+  "basePath": "/api/v1",
   "tags": [
     {
       "name": "skill",
@@ -30,7 +30,7 @@
     "http"
   ],
   "paths": {
-    "/api/v1/skills": {
+    "/skills": {
       "get": {
         "tags": [
           "skill"
@@ -141,7 +141,7 @@
         }
       }
     },
-    "/api/v1/accounts": {
+    "/accounts": {
       "get": {
         "tags": [
           "account"
@@ -252,7 +252,7 @@
         }
       }
     },
-    "/api/v1/developers": {
+    "/developers": {
       "get": {
         "tags": [
           "developer"

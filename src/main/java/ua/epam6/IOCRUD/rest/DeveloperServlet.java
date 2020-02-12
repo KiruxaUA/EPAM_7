@@ -60,7 +60,7 @@ public class DeveloperServlet extends HttpServlet {
         try {
             if(request.getParameter("id") == null || !request.getParameter("id").matches("\\d+")) {
                 log.debug("Request to get all");
-                writer.println(developerService.getAll());
+                writer.println(gson.toJson(developerService.getAll()));
                 log.debug("Sent JSON response");
             } else {
                 log.debug("Request to get by ID");

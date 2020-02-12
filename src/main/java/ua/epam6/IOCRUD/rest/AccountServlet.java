@@ -61,7 +61,7 @@ public class AccountServlet extends HttpServlet {
         try {
             if(request.getParameter("id") == null || !request.getParameter("id").matches("\\d+")) {
                 log.debug("Request to get all");
-                writer.println(accountService.getAll());
+                writer.println(gson.toJson(accountService.getAll()));
                 log.debug("Sent JSON response");
             } else {
                 log.debug("Request to get by ID");

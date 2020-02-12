@@ -5,14 +5,12 @@ import org.apache.log4j.Logger;
 import ua.epam6.IOCRUD.model.Developer;
 import ua.epam6.IOCRUD.service.DeveloperService;
 
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "DeveloperServlet", urlPatterns = "/api/v1/developers")
 public class DeveloperServlet extends HttpServlet {
 
     private static final Logger log = Logger.getLogger(DeveloperServlet.class);

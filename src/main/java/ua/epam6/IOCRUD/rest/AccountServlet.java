@@ -5,14 +5,12 @@ import org.apache.log4j.Logger;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.service.AccountService;
 
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "AccountServlet", urlPatterns = "/api/v1/accounts")
 public class AccountServlet extends HttpServlet {
 
     private final static Logger log = Logger.getLogger(AccountServlet.class);

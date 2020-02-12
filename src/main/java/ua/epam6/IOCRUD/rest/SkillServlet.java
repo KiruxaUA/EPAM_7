@@ -5,14 +5,12 @@ import org.apache.log4j.Logger;
 import ua.epam6.IOCRUD.model.Skill;
 import ua.epam6.IOCRUD.service.SkillService;
 
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "SkillServlet", urlPatterns = "/api/v1/skills")
 public class SkillServlet extends HttpServlet {
 
     private static final Logger log = Logger.getLogger(SkillServlet.class);

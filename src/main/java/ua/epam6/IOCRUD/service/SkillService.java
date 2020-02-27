@@ -1,5 +1,6 @@
 package ua.epam6.IOCRUD.service;
 
+import org.apache.log4j.Logger;
 import ua.epam6.IOCRUD.model.Skill;
 import ua.epam6.IOCRUD.repository.SkillRepository;
 import ua.epam6.IOCRUD.repository.jdbc.JdbcSkillRepositoryImpl;
@@ -7,25 +8,35 @@ import ua.epam6.IOCRUD.repository.jdbc.JdbcSkillRepositoryImpl;
 import java.util.List;
 
 public class SkillService {
-    private SkillRepository jdbcSkillRepo = new JdbcSkillRepositoryImpl();
+    private static final Logger log = Logger.getLogger(SkillService.class);
+    private SkillRepository skillRepository;
+
+    public SkillService(SkillRepository skillRepository) {
+        this.skillRepository = skillRepository;
+    }
 
     public Skill create(Skill model) throws Exception {
-        return jdbcSkillRepo.create(model);
+        log.debug("Executing skill creation...");
+        return skillRepository.create(model);
     }
 
     public Skill getById(Long ID) throws Exception {
-        return jdbcSkillRepo.getById(ID);
+        log.debug("Executing skill getting by ID...");
+        return skillRepository.getById(ID);
     }
 
     public Skill update(Skill model) throws Exception {
-        return jdbcSkillRepo.update(model);
+        log.debug("Executing skill updating...");
+        return skillRepository.update(model);
     }
 
     public void delete(Long ID) throws Exception {
-        jdbcSkillRepo.delete(ID);
+        log.debug("Executing skill deletion...");
+        skillRepository.delete(ID);
     }
 
     public List<Skill> getAll() throws Exception {
-        return jdbcSkillRepo.getAll();
+        log.debug("Executing skills information...");
+        return skillRepository.getAll();
     }
 }

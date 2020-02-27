@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import ua.epam6.IOCRUD.model.Skill;
 import ua.epam6.IOCRUD.repository.SkillRepository;
+import ua.epam6.IOCRUD.repository.jdbc.JdbcSkillRepositoryImpl;
 import ua.epam6.IOCRUD.testUtil.TestUtil;
 
 import static org.mockito.Mockito.times;
@@ -29,7 +30,7 @@ public class SkillServiceTest {
     public static void connect(){
         TestUtil.toTestMode();
         try {
-            testSkillService = new SkillService();
+            testSkillService = new SkillService(new JdbcSkillRepositoryImpl());
         } catch (Exception e) {
             e.printStackTrace();
         }

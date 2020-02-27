@@ -3,6 +3,7 @@ package ua.epam6.IOCRUD.rest;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import ua.epam6.IOCRUD.model.Developer;
+import ua.epam6.IOCRUD.repository.jdbc.JdbcDeveloperRepositoryImpl;
 import ua.epam6.IOCRUD.service.DeveloperService;
 
 import javax.servlet.http.HttpServlet;
@@ -18,7 +19,7 @@ public class DeveloperServlet extends HttpServlet {
     private Gson gson;
 
     public DeveloperServlet() {
-        developerService = new DeveloperService();
+        developerService = new DeveloperService(new JdbcDeveloperRepositoryImpl());
         gson = new Gson();
     }
 

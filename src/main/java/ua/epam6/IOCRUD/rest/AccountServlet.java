@@ -3,6 +3,7 @@ package ua.epam6.IOCRUD.rest;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import ua.epam6.IOCRUD.model.Account;
+import ua.epam6.IOCRUD.repository.jdbc.JdbcAccountRepositoryImpl;
 import ua.epam6.IOCRUD.service.AccountService;
 
 import javax.servlet.http.HttpServlet;
@@ -19,7 +20,7 @@ public class AccountServlet extends HttpServlet {
 
     @Override
     public void init() {
-        accountService = new AccountService();
+        accountService = new AccountService(new JdbcAccountRepositoryImpl());
         gson = new Gson();
     }
 

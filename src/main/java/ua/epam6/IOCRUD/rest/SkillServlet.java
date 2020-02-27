@@ -3,6 +3,7 @@ package ua.epam6.IOCRUD.rest;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import ua.epam6.IOCRUD.model.Skill;
+import ua.epam6.IOCRUD.repository.jdbc.JdbcSkillRepositoryImpl;
 import ua.epam6.IOCRUD.service.SkillService;
 
 import javax.servlet.http.HttpServlet;
@@ -20,7 +21,7 @@ public class SkillServlet extends HttpServlet {
     @Override
     public void init() {
         try {
-            skillService = new SkillService();
+            skillService = new SkillService(new JdbcSkillRepositoryImpl());
         } catch (Exception e) {
             log.error("Some problem", e);
             e.printStackTrace();

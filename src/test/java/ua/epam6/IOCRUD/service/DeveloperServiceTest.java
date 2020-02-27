@@ -10,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.model.Developer;
 import ua.epam6.IOCRUD.repository.DeveloperRepository;
+import ua.epam6.IOCRUD.repository.jdbc.JdbcDeveloperRepositoryImpl;
 import ua.epam6.IOCRUD.testUtil.TestUtil;
 
 import java.util.HashSet;
@@ -32,7 +33,7 @@ public class DeveloperServiceTest {
     public static void connect(){
         TestUtil.toTestMode();
         try {
-            testDeveloperService = new DeveloperService();
+            testDeveloperService = new DeveloperService(new JdbcDeveloperRepositoryImpl());
         } catch (Exception e) {
             e.printStackTrace();
         }

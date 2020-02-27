@@ -10,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.model.AccountStatus;
 import ua.epam6.IOCRUD.repository.AccountRepository;
+import ua.epam6.IOCRUD.repository.jdbc.JdbcAccountRepositoryImpl;
 import ua.epam6.IOCRUD.testUtil.TestUtil;
 
 import static org.mockito.Mockito.*;
@@ -27,7 +28,7 @@ public class AccountServiceTest {
     public static void connect() {
         TestUtil.toTestMode();
         try {
-            testAccountService = new AccountService();
+            testAccountService = new AccountService(new JdbcAccountRepositoryImpl());
         } catch (Exception e) {
             e.printStackTrace();
         }

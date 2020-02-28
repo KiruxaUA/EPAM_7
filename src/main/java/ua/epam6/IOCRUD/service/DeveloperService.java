@@ -4,10 +4,11 @@ import org.apache.log4j.Logger;
 import ua.epam6.IOCRUD.model.Developer;
 import ua.epam6.IOCRUD.repository.DeveloperRepository;
 import ua.epam6.IOCRUD.repository.jdbc.JdbcDeveloperRepositoryImpl;
+import ua.epam6.IOCRUD.service.servicevisitors.ServiceVisitor;
 
 import java.util.List;
 
-public class DeveloperService {
+public class DeveloperService implements Serviceable {
     private static final Logger log = Logger.getLogger(AccountService.class);
     private DeveloperRepository developerRepository;
 
@@ -38,5 +39,10 @@ public class DeveloperService {
     public List<Developer> getAll() throws Exception {
         log.debug("Executing developers information...");
         return developerRepository.getAll();
+    }
+
+    @Override
+    public void doService(ServiceVisitor visitor) {
+        visitor.visitDeveloperService(this);
     }
 }

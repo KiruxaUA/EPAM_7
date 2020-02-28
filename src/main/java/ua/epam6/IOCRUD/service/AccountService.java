@@ -4,10 +4,11 @@ import org.apache.log4j.Logger;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.repository.AccountRepository;
 import ua.epam6.IOCRUD.repository.jdbc.JdbcAccountRepositoryImpl;
+import ua.epam6.IOCRUD.service.servicevisitors.ServiceVisitor;
 
 import java.util.List;
 
-public class AccountService {
+public class AccountService implements Serviceable {
     private static final Logger log = Logger.getLogger(AccountService.class);
     private AccountRepository accountRepository;
 
@@ -38,5 +39,10 @@ public class AccountService {
     public List<Account> getAll() throws Exception {
         log.debug("Executing accounts information...");
         return accountRepository.getAll();
+    }
+
+    @Override
+    public void doService(ServiceVisitor visitor) {
+        visitor.visitAccountService(this);
     }
 }

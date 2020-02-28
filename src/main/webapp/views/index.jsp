@@ -21,7 +21,7 @@
     CRUD Application
 </h1>
 <h2>
-    <a href="documentation"><fmt:message key="documentation" /></a>
+    <a href="../documentation"><fmt:message key="documentation" /></a>
 </h2>
 <h2>
     <fmt:message key="entities" />

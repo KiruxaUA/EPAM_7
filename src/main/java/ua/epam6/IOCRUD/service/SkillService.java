@@ -4,10 +4,11 @@ import org.apache.log4j.Logger;
 import ua.epam6.IOCRUD.model.Skill;
 import ua.epam6.IOCRUD.repository.SkillRepository;
 import ua.epam6.IOCRUD.repository.jdbc.JdbcSkillRepositoryImpl;
+import ua.epam6.IOCRUD.service.servicevisitors.ServiceVisitor;
 
 import java.util.List;
 
-public class SkillService {
+public class SkillService implements Serviceable {
     private static final Logger log = Logger.getLogger(SkillService.class);
     private SkillRepository skillRepository;
 
@@ -38,5 +39,10 @@ public class SkillService {
     public List<Skill> getAll() throws Exception {
         log.debug("Executing skills information...");
         return skillRepository.getAll();
+    }
+
+    @Override
+    public void doService(ServiceVisitor visitor) {
+        visitor.visitSkillService(this);
     }
 }

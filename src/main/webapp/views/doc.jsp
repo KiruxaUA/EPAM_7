@@ -38,7 +38,7 @@
     window.onload = function() {
         // Begin Swagger UI call region
         const ui = SwaggerUIBundle({
-            url: "https://developercrud.herokuapp.com/documentation/doc.json",
+            url: "https://rest-crud-application.herokuapp.com/documentation/doc.json",
             dom_id: '#swagger-ui',
             deepLinking: true,
             presets: [

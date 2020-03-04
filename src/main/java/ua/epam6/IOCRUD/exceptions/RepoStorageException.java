@@ -1,6 +1,6 @@
 package ua.epam6.IOCRUD.exceptions;
 
-public class RepoStorageException extends Exception {
+public class RepoStorageException extends RuntimeException {
     public RepoStorageException() {
         super();
     }

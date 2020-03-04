@@ -35,18 +35,10 @@
         "tags": [
           "skill"
         ],
-        "summary": "Get all skills otherwise get by ID",
+        "summary": "Get all skills",
         "description": "",
         "produces": [
           "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "Skill's ID",
-            "type": "integer"
-          }
         ],
         "responses": {
           "200": {
@@ -55,12 +47,6 @@
               "items": {
                 "$ref": "#/definitions/Skill"
               }
-            }
-          },
-          "201": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Skill"
             }
           }
         }
@@ -115,7 +101,10 @@
             "description": "OK"
           },
           "400": {
-            "description": "Cannot update skill"
+            "description": "Bad Request"
+          },
+          "204": {
+            "description": "No Content"
           }
         }
       },
@@ -137,6 +126,50 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Invalid parameter"
+          },
+          "404": {
+            "description": "ID is not found"
+          },
+          "409": {
+            "description": "Conflict occurred while deleting skill"
+          }
+        }
+      }
+    },
+    "/skill": {
+      "get": {
+        "tags": [
+          "skill"
+        ],
+        "summary": "Get skill by ID",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Skill's ID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Skill"
+            }
+          },
+          "400": {
+            "description": "Invalid parameter ID"
+          },
+          "404": {
+            "description": "ID is not found"
           }
         }
       }
@@ -146,18 +179,10 @@
         "tags": [
           "account"
         ],
-        "summary": "Get all accounts otherwise get by ID",
+        "summary": "Get all accounts",
         "description": "",
         "produces": [
           "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "Account's ID",
-            "type": "integer"
-          }
         ],
         "responses": {
           "200": {
@@ -166,12 +191,6 @@
               "items": {
                 "$ref": "#/definitions/Account"
               }
-            }
-          },
-          "201": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Account"
             }
           }
         }
@@ -195,11 +214,14 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
           },
           "400": {
-            "description": "Cannot create account"
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict occurred while creating account"
           }
         }
       },
@@ -222,11 +244,17 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Cannot update account"
+          },
+          "404": {
+            "description": "Account not found!"
+          },
+          "409": {
+            "description": "Conflict occurred while updating account"
           }
         }
       },
@@ -246,8 +274,75 @@
           }
         ],
         "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Account not found!"
+          },
+          "409": {
+            "description": "Conflict occurred while deleting account"
+          }
+        }
+      }
+    },
+    "/account": {
+      "get": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Get account's data",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Get account's ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Invalid account's ID"
+          },
+          "404": {
+            "description": "Account's ID not found"
+          }
+        }
+      }
+    },
+    "/developer": {
+      "get": {
+        "tags": [
+          "developer"
+        ],
+        "summary": "Get developer's data",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Developer"
+            }
+          },
+          "400": {
+            "description": "Invalid developer's ID"
+          },
+          "404": {
+            "description": "Developer's ID not found"
           }
         }
       }
@@ -257,18 +352,10 @@
         "tags": [
           "developer"
         ],
-        "summary": "Get all developers otherwise get by ID",
+        "summary": "Get all developers",
         "description": "",
         "produces": [
           "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "Developer's ID",
-            "type": "integer"
-          }
         ],
         "responses": {
           "200": {
@@ -277,12 +364,6 @@
               "items": {
                 "$ref": "#/definitions/Developer"
               }
-            }
-          },
-          "201": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Developer"
             }
           }
         }
@@ -306,11 +387,14 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
           },
           "400": {
-            "description": "Cannot create developer"
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict occurred while creating developer"
           }
         }
       },
@@ -333,11 +417,17 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
           },
           "400": {
-            "description": "Cannot update developer"
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Developer's ID not found!"
+          },
+          "409": {
+            "description": "Conflict occurred while updating developer"
           }
         }
       },
@@ -357,8 +447,17 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Developer's ID not found!"
+          },
+          "409": {
+            "description": "Conflict occurred while deleting developer"
           }
         }
       }

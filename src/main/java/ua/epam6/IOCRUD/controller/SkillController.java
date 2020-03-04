@@ -23,7 +23,7 @@ public class SkillController {
         this.service = service;
     }
 
-    @GetMapping(value = "/skill", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "skills/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Skill> getById(@RequestParam(value = "id") Long id){
         ServiceVisitor visitor = VisitorFactory.getVisitorByOperation(VisitorFactory.GET_BY_ID, id);
         service.doService(visitor);
@@ -33,7 +33,7 @@ public class SkillController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "/skills")
+    @GetMapping(value = "skills")
     public ResponseEntity<List<?>> getAll(){
         ServiceVisitor visitor = VisitorFactory.getVisitorByOperation(VisitorFactory.GET_ALL, null);
         service.doService(visitor);
@@ -43,19 +43,19 @@ public class SkillController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping(value = "/skills")
+    @PostMapping(value = "skills")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void create(@RequestBody Skill skill) {
         service.doService(VisitorFactory.getVisitorByOperation(VisitorFactory.CREATE, skill));
     }
 
-    @PutMapping(value = "/skills")
+    @PutMapping(value = "skills")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void update(@RequestBody Skill skill) {
         service.doService(VisitorFactory.getVisitorByOperation(VisitorFactory.UPDATE, skill));
     }
 
-    @DeleteMapping(value = "/skills")
+    @DeleteMapping(value = "skills/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void delete(@RequestParam(value = "id") Long id){
         service.doService(VisitorFactory.getVisitorByOperation(VisitorFactory.DELETE, id));

@@ -1,6 +1,7 @@
 package ua.epam6.IOCRUD.repository.jdbc;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Repository;
 import ua.epam6.IOCRUD.repository.DeveloperRepository;
 import ua.epam6.IOCRUD.mappers.JdbcDeveloperMapper;
 import ua.epam6.IOCRUD.model.Developer;
@@ -11,6 +12,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository("developerRepository")
 public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     private static final Logger log = Logger.getLogger(JdbcDeveloperRepositoryImpl.class);
     private final String INSERT_QUERY = "INSERT INTO 1?(2?) VALUES (3?);";
@@ -40,7 +42,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     }
 
     @Override
-    public Developer create(Developer developerModel) {
+    public void create(Developer developerModel) {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                         ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
@@ -69,7 +71,6 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
             }
             log.error("Wrong SQL query to database in creation", e);
         }
-        return developerModel;
     }
 
     @Override
@@ -96,7 +97,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     }
 
     @Override
-    public Developer update(Developer updatedModel) {
+    public void update(Developer updatedModel) {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
@@ -131,7 +132,6 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
             }
             log.error("Wrong SQL query to database in updating", e);
         }
-        return updatedModel;
     }
 
     @Override

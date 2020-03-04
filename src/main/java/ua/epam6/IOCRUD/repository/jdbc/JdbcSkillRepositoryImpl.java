@@ -1,6 +1,8 @@
 package ua.epam6.IOCRUD.repository.jdbc;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Repository;
+import ua.epam6.IOCRUD.annotation.Timed;
 import ua.epam6.IOCRUD.repository.SkillRepository;
 import ua.epam6.IOCRUD.exceptions.NoSuchEntryException;
 import ua.epam6.IOCRUD.exceptions.RepoStorageException;
@@ -12,6 +14,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository("skillRepository")
 public class JdbcSkillRepositoryImpl implements SkillRepository {
     private static final Logger log = Logger.getLogger(JdbcSkillRepositoryImpl.class);
     private final String INSERT_QUERY = "INSERT INTO skills(name) VALUES (?);";
@@ -30,8 +33,9 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
     }
 
     @Override
-    public Skill create(Skill model) {
-        try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)) {
+    @Timed
+    public void create(Skill model) {
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setString(1, model.getName());
             statement.execute();
             log.debug("Created entry(Database): " + model);
@@ -39,12 +43,11 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
         catch (SQLException e) {
             log.error("Error in creation of SQL query");
             System.out.println("Error in creation of SQL query");
-            model = null;
         }
-        return model;
     }
 
     @Override
+    @Timed
     public Skill getById(Long Id) {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setLong(1, Id);
@@ -61,7 +64,8 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
     }
 
     @Override
-    public Skill update(Skill updatedModel) throws NoSuchEntryException {
+    @Timed
+    public void update(Skill updatedModel) throws NoSuchEntryException {
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setString(1, updatedModel.getName());
             statement.setLong(2, updatedModel.getId());
@@ -74,10 +78,10 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
         catch (SQLException e) {
             log.error("Error in updating record in SQL query", e);
         }
-        return updatedModel;
     }
 
     @Override
+    @Timed
     public void delete(Long deleteEntry) throws NoSuchEntryException, RepoStorageException {
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setLong(1, deleteEntry);
@@ -94,6 +98,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
     }
 
     @Override
+    @Timed
     public List<Skill> getAll() {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             ResultSet resultSet = statement.executeQuery();

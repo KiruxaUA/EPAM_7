@@ -16,9 +16,9 @@ public class AccountService implements Serviceable {
         this.accountRepository = accountRepository;
     }
 
-    public Account create(Account model) throws Exception {
+    public void create(Account model) throws Exception {
         log.debug("Executing account creation...");
-        return accountRepository.create(model);
+        accountRepository.create(model);
     }
 
     public Account getById(Long ID) throws Exception {
@@ -26,9 +26,9 @@ public class AccountService implements Serviceable {
         return accountRepository.getById(ID);
     }
 
-    public Account update(Account model) throws Exception {
+    public void update(Account model) throws Exception {
         log.debug("Executing account updating...");
-        return accountRepository.update(model);
+        accountRepository.update(model);
     }
 
     public void delete(Long ID) throws Exception {

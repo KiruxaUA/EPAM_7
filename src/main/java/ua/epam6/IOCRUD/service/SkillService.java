@@ -16,9 +16,9 @@ public class SkillService implements Serviceable {
         this.skillRepository = skillRepository;
     }
 
-    public Skill create(Skill model) throws Exception {
+    public void create(Skill model) throws Exception {
         log.debug("Executing skill creation...");
-        return skillRepository.create(model);
+        skillRepository.create(model);
     }
 
     public Skill getById(Long ID) throws Exception {
@@ -26,9 +26,9 @@ public class SkillService implements Serviceable {
         return skillRepository.getById(ID);
     }
 
-    public Skill update(Skill model) throws Exception {
+    public void update(Skill model) throws Exception {
         log.debug("Executing skill updating...");
-        return skillRepository.update(model);
+        skillRepository.update(model);
     }
 
     public void delete(Long ID) throws Exception {

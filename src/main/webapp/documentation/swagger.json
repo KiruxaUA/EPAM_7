@@ -109,7 +109,7 @@
         }
       }
     },
-    "/skill/{id}": {
+    "/skills/{id}": {
       "get": {
         "tags": [
           "skill"
@@ -259,7 +259,7 @@
         }
       }
     },
-    "/account/{id}": {
+    "/accounts/{id}": {
       "get": {
         "tags": [
           "account"
@@ -321,7 +321,7 @@
         }
       }
     },
-    "/developer/{id}": {
+    "/developers/{id}": {
       "get": {
         "tags": [
           "developer"

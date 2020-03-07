@@ -1,6 +1,7 @@
 package ua.epam6.IOCRUD.repository.jdbc;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Repository;
 import ua.epam6.IOCRUD.repository.DeveloperRepository;
 import ua.epam6.IOCRUD.mappers.JdbcDeveloperMapper;
 import ua.epam6.IOCRUD.model.Developer;
@@ -11,6 +12,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository("developerRepository")
 public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     private static final Logger log = Logger.getLogger(JdbcDeveloperRepositoryImpl.class);
     private final String INSERT_QUERY = "INSERT INTO 1?(2?) VALUES (3?);";

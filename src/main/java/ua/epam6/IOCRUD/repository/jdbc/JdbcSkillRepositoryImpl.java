@@ -1,6 +1,7 @@
 package ua.epam6.IOCRUD.repository.jdbc;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Repository;
 import ua.epam6.IOCRUD.repository.SkillRepository;
 import ua.epam6.IOCRUD.exceptions.NoSuchEntryException;
 import ua.epam6.IOCRUD.exceptions.RepoStorageException;
@@ -12,6 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository("skillRepository")
 public class JdbcSkillRepositoryImpl implements SkillRepository {
     private static final Logger log = Logger.getLogger(JdbcSkillRepositoryImpl.class);
     private final String INSERT_QUERY = "INSERT INTO skills(name) VALUES (?);";

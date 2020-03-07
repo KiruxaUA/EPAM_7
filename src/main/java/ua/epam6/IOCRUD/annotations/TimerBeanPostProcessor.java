@@ -1,4 +1,4 @@
-package ua.epam6.IOCRUD.annotation;
+package ua.epam6.IOCRUD.annotations;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;

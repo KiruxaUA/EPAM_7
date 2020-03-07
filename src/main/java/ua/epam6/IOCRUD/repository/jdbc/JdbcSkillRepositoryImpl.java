@@ -34,7 +34,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
 
     @Override
     @Timed
-    public Skill create(Skill model) {
+    public void create(Skill model) {
         try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)) {
             statement.setString(1, model.getName());
             statement.execute();
@@ -45,7 +45,6 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
             System.out.println("Error in creation of SQL query");
             model = null;
         }
-        return model;
     }
 
     @Override
@@ -67,7 +66,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
 
     @Override
     @Timed
-    public Skill update(Skill updatedModel) throws NoSuchEntryException {
+    public void update(Skill updatedModel) throws NoSuchEntryException {
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setString(1, updatedModel.getName());
             statement.setLong(2, updatedModel.getId());
@@ -80,7 +79,6 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
         catch (SQLException e) {
             log.error("Error in updating record in SQL query", e);
         }
-        return updatedModel;
     }
 
     @Override

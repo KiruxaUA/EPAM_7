@@ -1,6 +1,7 @@
 package ua.epam6.IOCRUD.service;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.epam6.IOCRUD.model.Skill;
 import ua.epam6.IOCRUD.repository.SkillRepository;
@@ -14,6 +15,7 @@ public class SkillService implements Serviceable {
     private static final Logger log = Logger.getLogger(SkillService.class);
     private SkillRepository skillRepository;
 
+    @Autowired
     public SkillService(SkillRepository skillRepository) {
         this.skillRepository = skillRepository;
     }

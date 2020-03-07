@@ -1,6 +1,7 @@
 package ua.epam6.IOCRUD.service;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.epam6.IOCRUD.model.Account;
 import ua.epam6.IOCRUD.repository.AccountRepository;
@@ -14,6 +15,7 @@ public class AccountService implements Serviceable {
     private static final Logger log = Logger.getLogger(AccountService.class);
     private AccountRepository accountRepository;
 
+    @Autowired
     public AccountService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }

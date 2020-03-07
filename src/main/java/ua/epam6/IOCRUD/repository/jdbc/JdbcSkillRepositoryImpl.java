@@ -2,6 +2,7 @@ package ua.epam6.IOCRUD.repository.jdbc;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
+import ua.epam6.IOCRUD.annotations.Timed;
 import ua.epam6.IOCRUD.repository.SkillRepository;
 import ua.epam6.IOCRUD.exceptions.NoSuchEntryException;
 import ua.epam6.IOCRUD.exceptions.RepoStorageException;
@@ -32,6 +33,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
     }
 
     @Override
+    @Timed
     public Skill create(Skill model) {
         try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)) {
             statement.setString(1, model.getName());
@@ -47,6 +49,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
     }
 
     @Override
+    @Timed
     public Skill getById(Long Id) {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setLong(1, Id);
@@ -63,6 +66,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
     }
 
     @Override
+    @Timed
     public Skill update(Skill updatedModel) throws NoSuchEntryException {
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setString(1, updatedModel.getName());
@@ -80,6 +84,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
     }
 
     @Override
+    @Timed
     public void delete(Long deleteEntry) throws NoSuchEntryException, RepoStorageException {
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setLong(1, deleteEntry);
@@ -96,6 +101,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
     }
 
     @Override
+    @Timed
     public List<Skill> getAll() {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             ResultSet resultSet = statement.executeQuery();

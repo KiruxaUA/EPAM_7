@@ -20,9 +20,9 @@ public class DeveloperService implements Serviceable {
         this.developerRepository = developerRepository;
     }
 
-    public Developer create(Developer model) throws Exception {
+    public void create(Developer model) throws Exception {
         log.debug("Executing developer creation...");
-        return developerRepository.create(model);
+        developerRepository.create(model);
     }
 
     public Developer getById(Long ID) throws Exception{
@@ -30,9 +30,9 @@ public class DeveloperService implements Serviceable {
         return developerRepository.getById(ID);
     }
 
-    public Developer update(Developer model) throws Exception {
+    public void update(Developer model) throws Exception {
         log.debug("Executing developer updating...");
-        return developerRepository.update(model);
+        developerRepository.update(model);
     }
 
     public void delete(Long ID) throws Exception {

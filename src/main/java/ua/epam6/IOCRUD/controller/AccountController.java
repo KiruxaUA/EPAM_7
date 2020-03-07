@@ -24,7 +24,7 @@ public class AccountController {
     }
 
     @GetMapping(value = "accounts/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Account> getById(@RequestParam(value = "id") Long id) {
+    public ResponseEntity<Account> getById(@PathVariable Long id) {
         ServiceVisitor visitor = VisitorFactory.getVisitorByOperation(VisitorFactory.GET_BY_ID, id);
         service.doService(visitor);
         if(visitor.getResultData() != null && visitor.getResultData() instanceof Account){

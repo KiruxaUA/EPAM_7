@@ -107,39 +107,9 @@
             "description": "No Content"
           }
         }
-      },
-      "delete": {
-        "tags": [
-          "skill"
-        ],
-        "summary": "Delete skill",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "Skill's ID",
-            "required": true,
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Invalid parameter"
-          },
-          "404": {
-            "description": "ID is not found"
-          },
-          "409": {
-            "description": "Conflict occurred while deleting skill"
-          }
-        }
       }
     },
-    "/skill": {
+    "/skills/{id}": {
       "get": {
         "tags": [
           "skill"
@@ -152,7 +122,7 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
             "description": "Skill's ID",
             "type": "integer",
             "required": true
@@ -170,6 +140,36 @@
           },
           "404": {
             "description": "ID is not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "skill"
+        ],
+        "summary": "Delete skill by ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Skill's ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalid parameter"
+          },
+          "404": {
+            "description": "ID is not found"
+          },
+          "409": {
+            "description": "Conflict occurred while deleting skill"
           }
         }
       }
@@ -257,6 +257,38 @@
             "description": "Conflict occurred while updating account"
           }
         }
+      }
+    },
+    "/accounts/{id}": {
+      "get": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Get account's data",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Get account's ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalid account's ID"
+          },
+          "404": {
+            "description": "Account's ID not found"
+          }
+        }
       },
       "delete": {
         "tags": [
@@ -267,7 +299,7 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
             "description": "Account's ID",
             "required": true,
             "type": "integer"
@@ -289,12 +321,12 @@
         }
       }
     },
-    "/account": {
+    "/developers/{id}": {
       "get": {
         "tags": [
-          "account"
+          "developer"
         ],
-        "summary": "Get account's data",
+        "summary": "Get developer's data by ID",
         "description": "",
         "produces": [
           "application/json"
@@ -302,34 +334,11 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
-            "description": "Get account's ID",
+            "in": "path",
+            "description": "Developer's ID",
             "required": true,
             "type": "integer"
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Invalid account's ID"
-          },
-          "404": {
-            "description": "Account's ID not found"
-          }
-        }
-      }
-    },
-    "/developer": {
-      "get": {
-        "tags": [
-          "developer"
-        ],
-        "summary": "Get developer's data",
-        "description": "",
-        "produces": [
-          "application/json"
         ],
         "responses": {
           "200": {
@@ -343,6 +352,36 @@
           },
           "404": {
             "description": "Developer's ID not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "developer"
+        ],
+        "summary": "Delete developer",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Developer's ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Developer's ID not found!"
+          },
+          "409": {
+            "description": "Conflict occurred while deleting developer"
           }
         }
       }
@@ -431,36 +470,6 @@
           }
         }
       },
-      "delete": {
-        "tags": [
-          "developer"
-        ],
-        "summary": "Delete developer",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "Developer's ID",
-            "required": true,
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Developer's ID not found!"
-          },
-          "409": {
-            "description": "Conflict occurred while deleting developer"
-          }
-        }
-      }
     }
   },
   "definitions": {

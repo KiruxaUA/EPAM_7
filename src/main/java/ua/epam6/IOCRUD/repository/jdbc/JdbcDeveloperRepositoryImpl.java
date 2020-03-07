@@ -42,7 +42,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     }
 
     @Override
-    public Developer create(Developer developerModel) {
+    public void create(Developer developerModel) {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                         ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
@@ -71,7 +71,6 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
             }
             log.error("Wrong SQL query to database in creation", e);
         }
-        return developerModel;
     }
 
     @Override
@@ -98,7 +97,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     }
 
     @Override
-    public Developer update(Developer updatedModel) {
+    public void update(Developer updatedModel) {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
@@ -133,7 +132,6 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
             }
             log.error("Wrong SQL query to database in updating", e);
         }
-        return updatedModel;
     }
 
     @Override

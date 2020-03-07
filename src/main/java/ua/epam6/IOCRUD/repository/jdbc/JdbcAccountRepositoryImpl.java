@@ -1,6 +1,7 @@
 package ua.epam6.IOCRUD.repository.jdbc;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Repository;
 import ua.epam6.IOCRUD.repository.AccountRepository;
 import ua.epam6.IOCRUD.exceptions.NoSuchEntryException;
 import ua.epam6.IOCRUD.exceptions.RepoStorageException;
@@ -12,6 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository("accountRepository")
 public class JdbcAccountRepositoryImpl implements AccountRepository {
     private static final Logger log = Logger.getLogger(JdbcAccountRepositoryImpl.class);
     private final String INSERT_QUERY = "INSERT INTO accounts(name, status) VALUES (?, ?);";

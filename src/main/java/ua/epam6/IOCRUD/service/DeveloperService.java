@@ -1,6 +1,7 @@
 package ua.epam6.IOCRUD.service;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 import ua.epam6.IOCRUD.model.Developer;
 import ua.epam6.IOCRUD.repository.DeveloperRepository;
 import ua.epam6.IOCRUD.repository.jdbc.JdbcDeveloperRepositoryImpl;
@@ -8,6 +9,7 @@ import ua.epam6.IOCRUD.service.servicevisitors.ServiceVisitor;
 
 import java.util.List;
 
+@Service("developerService")
 public class DeveloperService implements Serviceable {
     private static final Logger log = Logger.getLogger(AccountService.class);
     private DeveloperRepository developerRepository;

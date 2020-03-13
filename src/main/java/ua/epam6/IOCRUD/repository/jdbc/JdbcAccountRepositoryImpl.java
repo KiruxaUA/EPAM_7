@@ -2,6 +2,7 @@ package ua.epam6.IOCRUD.repository.jdbc;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
+import ua.epam6.IOCRUD.annotations.Timed;
 import ua.epam6.IOCRUD.repository.AccountRepository;
 import ua.epam6.IOCRUD.exceptions.NoSuchEntryException;
 import ua.epam6.IOCRUD.exceptions.RepoStorageException;
@@ -32,6 +33,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
+    @Timed
     public void create(Account accountModel) throws RepoStorageException {
         try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             statement.setString(1, accountModel.getName());
@@ -45,6 +47,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
+    @Timed
     public Account getById(Long ID) throws RepoStorageException {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setLong(1, ID);
@@ -59,6 +62,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
+    @Timed
     public void update(Account updatedModel) throws NoSuchEntryException {
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setString(1, updatedModel.getName());
@@ -76,6 +80,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
+    @Timed
     public void delete(Long deleteEntry) {
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             statement.setLong(1, deleteEntry);
@@ -90,6 +95,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
+    @Timed
     public List<Account> getAll() {
         try (PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             ResultSet resultSet = statement.executeQuery();

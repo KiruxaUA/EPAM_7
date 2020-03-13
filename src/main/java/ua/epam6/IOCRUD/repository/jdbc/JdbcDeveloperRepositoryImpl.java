@@ -2,6 +2,7 @@ package ua.epam6.IOCRUD.repository.jdbc;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
+import ua.epam6.IOCRUD.annotations.Timed;
 import ua.epam6.IOCRUD.repository.DeveloperRepository;
 import ua.epam6.IOCRUD.mappers.JdbcDeveloperMapper;
 import ua.epam6.IOCRUD.model.Developer;
@@ -42,6 +43,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     }
 
     @Override
+    @Timed
     public void create(Developer developerModel) {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                         ResultSet.CONCUR_UPDATABLE)){
@@ -74,6 +76,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     }
 
     @Override
+    @Timed
     public Developer getById(Long ID) {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE)){
@@ -97,6 +100,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     }
 
     @Override
+    @Timed
     public void update(Developer updatedModel) {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE)){
@@ -135,6 +139,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     }
 
     @Override
+    @Timed
     public void delete(Long deletedEntry) {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE)){
@@ -164,6 +169,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     }
 
     @Override
+    @Timed
     public List<Developer> getAll() {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE)){
